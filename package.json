@@ -1,8 +1,9 @@
 {
   "name": "chai-jest-snapshot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Chai assertion that provides Jest's snapshot testing",
   "main": "dist/index.js",
+  "repository": "https://github.com/suchipi/chai-jest-snapshot",
   "scripts": {
     "build": "rm -rf dist/*; babel src --out-dir dist",
     "mocha": "mocha 'dist/**/*.spec.js'",
