@@ -20,7 +20,7 @@ chai.use(chaiJestSnapshot);
 ```js
 import path from "path";
 import React from "react";
-import renderer from "react/lib/ReactTestRenderer";
+import renderer from "react-test-renderer";
 import { expect } from "chai";
 import Link from "./Link";
 
