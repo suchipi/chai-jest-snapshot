@@ -25,6 +25,7 @@ const prettyTree = `<div>
 const workspacePath = (...args) => path.join(__dirname, "matchSnapshot.spec.workspace", ...args);
 
 const EXISTING_SNAPSHOT_PATH = workspacePath("ExampleComponent.js.snap");
+const EXISTING_SNAPSHOT_RELATIVE_PATH = "src/spec/matchSnapshot.spec.workspace/ExampleComponent.js.snap";
 const EXISTING_SNAPSHOT_NAME = "ExampleComponent renders properly";
 const NONEXISTANT_SNAPSHOT_PATH = workspacePath("SomeOtherComponent.js.snap");
 const NONEXISTANT_SNAPSHOT_NAME = "ExampleComponent throws rubber chickens";
@@ -56,6 +57,19 @@ describe("matchSnapshot", function() {
     matchOperation.run();
     expect(matchOperation.assert).to.have.been.calledWith(true);
   }
+
+  const expectFailure = (actual) => () => {
+    let matchOperation = createMatchOperation();
+    matchOperation.run();
+    expect(matchOperation.assert).to.have.been.calledWith(
+      false,
+      `expected value to match snapshot ${snapshotName}`,
+      `expected value to not match snapshot ${snapshotName}`,
+      prettyTree,
+      actual,
+      true
+    );
+  };
 
   beforeEach(function() {
     // clear out workspace
@@ -97,25 +111,16 @@ describe("matchSnapshot", function() {
           object = "something other than tree";
         });
 
-        it("does not overwrite the snapshot with the new content", function() {
+        function doesNotOverwriteSnapshot() {
           createMatchOperation().run();
           let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
           let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n${prettyTree}\n\`;\n`;
           expect(snapshotFileContent).to.equal(expectedContent);
-        });
+        }
 
-        it("the assertion does not pass", function() {
-          let matchOperation = createMatchOperation();
-          matchOperation.run();
-          expect(matchOperation.assert).to.have.been.calledWith(
-            false,
-            `expected value to match snapshot ${snapshotName}`,
-            `expected value to not match snapshot ${snapshotName}`,
-            prettyTree,
-            '"something other than tree"',
-            true
-          );
-        });
+        it("does not overwrite the snapshot with the new content", doesNotOverwriteSnapshot);
+
+        it("the assertion does not pass", expectFailure('"something other than tree"'));
 
         describe("and the 'update' flag set to true", function() {
           beforeEach(function() {
@@ -130,7 +135,17 @@ describe("matchSnapshot", function() {
           });
 
           it("the assertion passes", expectPass)
-        })
+        });
+
+        describe("and a relative path is used (#1)", function() {
+          beforeEach(function() {
+            snapshotFileName = EXISTING_SNAPSHOT_RELATIVE_PATH;
+          });
+
+          it("does not overwrite the snapshot with the new content", doesNotOverwriteSnapshot);
+
+          it("the assertion does not pass", expectFailure('"something other than tree"'));
+        });
       });
     });
 

@@ -1,8 +1,10 @@
+import path from "path";
 import SnapshotFile from "./SnapshotFile";
 
 export default function matchSnapshot(snapshotFileName, snapshotName, update) {
   const obj = this._obj;
-  const snapshotFile = new SnapshotFile(snapshotFileName);
+  const absolutePathToSnapshot = path.resolve(snapshotFileName);
+  const snapshotFile = new SnapshotFile(absolutePathToSnapshot);
   let matches;
   let pass;
 
