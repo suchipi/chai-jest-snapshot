@@ -3,12 +3,10 @@ import fs from "fs";
 import rimraf from "rimraf";
 import React from "react";
 import renderer from "react/lib/ReactTestRenderer";
-import chai, { expect } from "chai";
+import { expect } from "chai";
 import sinon from "sinon";
-import sinonChai from "sinon-chai";
 import SnapshotFile from "../SnapshotFile";
 import matchSnapshot from "../matchSnapshot";
-chai.use(sinonChai);
 
 const ExampleComponent = () => (
   <div>

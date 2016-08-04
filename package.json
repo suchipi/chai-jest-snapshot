@@ -6,7 +6,7 @@
   "repository": "https://github.com/suchipi/chai-jest-snapshot",
   "scripts": {
     "build": "rm -rf dist/*; babel src --out-dir dist",
-    "mocha": "mocha 'dist/**/*.spec.js'",
+    "mocha": "mocha -r 'dist/spec/index' 'dist/**/*.spec.js'",
     "test": "npm run build; npm run mocha"
   },
   "keywords": [
