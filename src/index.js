@@ -1,5 +1,5 @@
-import matchSnapshot from "./matchSnapshot";
+import buildMatchSnapshot from "./buildMatchSnapshot";
 
 module.exports = function(chai, utils) {
-  chai.Assertion.addMethod("matchSnapshot", matchSnapshot);
+  chai.Assertion.addMethod("matchSnapshot", buildMatchSnapshot(utils));
 };

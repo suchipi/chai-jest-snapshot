@@ -1,7 +1,11 @@
 import path from "path";
 import SnapshotFile from "./SnapshotFile";
 
-export default function matchSnapshot(snapshotFileName, snapshotName, update) {
+const buildMatchSnapshot = (utils) => function matchSnapshot(snapshotFileName, snapshotName, update) {
+  if (utils.flag(this, 'negate')) {
+    throw new Error("`matchSnapshot` cannot be used with `.not`.");
+  }
+
   const obj = this._obj;
   const absolutePathToSnapshot = path.resolve(snapshotFileName);
   const snapshotFile = new SnapshotFile(absolutePathToSnapshot);
@@ -31,4 +35,6 @@ export default function matchSnapshot(snapshotFileName, snapshotName, update) {
     matches && matches.actual && matches.actual.trim(),
     matches && true
   )
-}
+};
+
+export default buildMatchSnapshot;

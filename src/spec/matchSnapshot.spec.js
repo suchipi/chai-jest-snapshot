@@ -6,7 +6,7 @@ import renderer from "react/lib/ReactTestRenderer";
 import { expect } from "chai";
 import sinon from "sinon";
 import SnapshotFile from "../SnapshotFile";
-import matchSnapshot from "../matchSnapshot";
+import buildMatchSnapshot from "../buildMatchSnapshot";
 
 const ExampleComponent = () => (
   <div>
@@ -35,6 +35,7 @@ describe("matchSnapshot", function() {
   let snapshotFileName;
   let snapshotName;
   let update;
+  let utils;
 
   // Creates object with shape: { run, assert }
   // `run` will call matchSnapshot with its value of `this` stubbed appropriately
@@ -43,7 +44,7 @@ describe("matchSnapshot", function() {
     let assert = sinon.spy();
     return {
       run() {
-        matchSnapshot.call({
+        buildMatchSnapshot(utils).call({
           _obj: object,
           assert
         }, snapshotFileName, snapshotName, update);
@@ -83,6 +84,7 @@ describe("matchSnapshot", function() {
     snapshotFileName = undefined;
     snapshotName = undefined;
     update = false;
+    utils = { flag: () => undefined };
   });
 
   afterEach(function() {
@@ -105,7 +107,18 @@ describe("matchSnapshot", function() {
         });
 
         it("the assertion passes", expectPass);
+
+        describe("and the assertion is made with `.not` in the chain", function() {
+          beforeEach(function() {
+            utils = { flag: (_, name) => name === 'negate' ? true : undefined };
+          });
+
+          it("throws an error", function() {
+            expect(createMatchOperation().run).to.throw(Error, "`matchSnapshot` cannot be used with `.not`.");
+          });
+        });
       });
+
       describe("and the content does not match", function() {
         beforeEach(function() {
           object = "something other than tree";
