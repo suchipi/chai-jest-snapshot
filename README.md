@@ -41,6 +41,14 @@ To update snapshot (similar to `jest -u`):
 expect(tree).to.matchSnapshot(snapshotFileName, snapshotName, true);
 ```
 Unlike `jest -u`, it doesn't update all snapshots, only the one you added `true` to.
+If you want to update all snapshots without adding `true` to each one, set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
+```shell
+# assuming `npm test` runs your tests (which it should):
+# sh/bash/zsh
+$ CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
+# fish
+$ env CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
+```
 
 See [Jest 14.0: React Snapshot Testing](https://facebook.github.io/jest/blog/2016/07/27/jest-14.html) for more info.
 

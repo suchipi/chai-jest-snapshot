@@ -36,7 +36,9 @@ const buildMatchSnapshot = (utils) => {
       pass = true;
     }
 
-    if (!pass && update) {
+    const shouldUpdate = update || (typeof process !== "undefined" && process.env && process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL);
+
+    if (!pass && shouldUpdate) {
       snapshotFile.add(snapshotName, obj);
       snapshotFile.save();
       pass = true;

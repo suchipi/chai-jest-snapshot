@@ -97,6 +97,7 @@ describe("matchSnapshot", function() {
     snapshotName = undefined;
     update = false;
     utils = { flag: () => undefined };
+    delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
   });
 
   afterEach(function() {
@@ -120,7 +121,7 @@ describe("matchSnapshot", function() {
       snapshotFileName = EXISTING_SNAPSHOT_PATH;
     });
 
-    it("uses the same snapshotFile instance across multiple runs", expectUsesSameInstance);
+    it("uses the same snapshotFile instance across multiple runs (#2)", expectUsesSameInstance);
 
     describe("and the snapshot file has the snapshot", function() {
       beforeEach(function() {
@@ -161,19 +162,35 @@ describe("matchSnapshot", function() {
 
         it("the assertion does not pass", expectFailure('"something other than tree"'));
 
+        const expectOverwritesSnapshot = () => {
+          createMatchOperation().run();
+          let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
+          let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
+          expect(snapshotFileContent).to.equal(expectedContent);
+        }
+
         describe("and the 'update' flag set to true", function() {
           beforeEach(function() {
             update = true;
           });
 
-          it("overwrites the snapshot with the new content", function() {
-            createMatchOperation().run();
-            let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
-            let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
-            expect(snapshotFileContent).to.equal(expectedContent);
+          it("overwrites the snapshot with the new content", expectOverwritesSnapshot);
+          it("the assertion passes", expectPass)
+        });
+
+        describe("and the 'update' flag not set to true", function() {
+          beforeEach(function() {
+            update = undefined;
           });
 
-          it("the assertion passes", expectPass)
+          describe("but the environment variable CHAI_JEST_SNAPSHOT_UPDATE_ALL set", function() {
+            beforeEach(function() {
+              process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
+            });
+
+            it("overwrites the snapshot with the new content", expectOverwritesSnapshot);
+            it("the assertion passes", expectPass)
+          });
         });
 
         describe("and a relative path is used (#1)", function() {
@@ -217,7 +234,7 @@ describe("matchSnapshot", function() {
       object = tree;
     });
 
-    it("uses the same snapshotFile instance across multiple runs", expectUsesSameInstance);
+    it("uses the same snapshotFile instance across multiple runs (#2)", expectUsesSameInstance);
 
     it("a new snapshot file is created with the snapshot content", function() {
       createMatchOperation().run();
