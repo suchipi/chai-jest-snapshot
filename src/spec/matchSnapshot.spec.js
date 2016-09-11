@@ -40,16 +40,28 @@ describe("matchSnapshot", function() {
   // Creates object with shape: { run, assert }
   // `run` will call matchSnapshot with its value of `this` stubbed appropriately
   // `assert` is a sinon.spy() that was made available to matchSnapshot as `this.assert`
+  // `internal` is an object that contains any variables that were published by the match operation
+  // for testing purposes.
   const createMatchOperation = () => {
     let assert = sinon.spy();
+    let internal = {};
+    let timesRan = 0;
+    const matchSnapshot = buildMatchSnapshot(utils);
+
     return {
       run() {
-        buildMatchSnapshot(utils).call({
+        matchSnapshot.call({
           _obj: object,
-          assert
+          assert,
+          _publishInternalVariableForTesting: (name, value) => {
+            internal[name] = internal[name] || [];
+            internal[name][timesRan] = value;
+          }
         }, snapshotFileName, snapshotName, update);
+        timesRan++;
       },
-      assert
+      assert,
+      internal
     }
   };
 
@@ -91,10 +103,24 @@ describe("matchSnapshot", function() {
     rimraf.sync(workspacePath("*"));
   });
 
+  const expectUsesSameInstance = () => {
+    object = "whatever";
+    const operation = createMatchOperation();
+    snapshotName = "first";
+    operation.run();
+    snapshotName = "second";
+    operation.run();
+    expect(operation.internal.snapshotFile[0]).to.be.an.instanceof(SnapshotFile);
+    expect(operation.internal.snapshotFile[1]).to.be.an.instanceof(SnapshotFile);
+    expect(operation.internal.snapshotFile[0] === operation.internal.snapshotFile[1]).to.be.true;
+  };
+
   describe("when the snapshot file exists", function() {
     beforeEach(function() {
       snapshotFileName = EXISTING_SNAPSHOT_PATH;
     });
+
+    it("uses the same snapshotFile instance across multiple runs", expectUsesSameInstance);
 
     describe("and the snapshot file has the snapshot", function() {
       beforeEach(function() {
@@ -190,6 +216,8 @@ describe("matchSnapshot", function() {
       snapshotName = NONEXISTANT_SNAPSHOT_NAME;
       object = tree;
     });
+
+    it("uses the same snapshotFile instance across multiple runs", expectUsesSameInstance);
 
     it("a new snapshot file is created with the snapshot content", function() {
       createMatchOperation().run();
