@@ -2,10 +2,27 @@ import path from "path";
 import SnapshotFile from "./SnapshotFile";
 import values from "lodash.values";
 
-const buildMatchSnapshot = (utils) => {
+const snapshotNameCounter = {};
+
+const buildMatchSnapshot = (utils, internalConfig) => {
   const snapshotFiles = {};
+  internalConfig = internalConfig || {};
 
   return function matchSnapshot(snapshotFileName, snapshotName, update) {
+    snapshotFileName = snapshotFileName || internalConfig.snapshotFileName;
+    if (!snapshotFileName) {
+      throw new Error("Snapshot file name must be defined by #registerSnapshotFileName or as a param to #matchJson.")
+    }
+    if (!snapshotName) {
+      const snapshotNameTemplate = internalConfig.snapshotNameTemplate;
+      if (!snapshotNameTemplate) {
+        throw new Error("Snapshot name must be available as a param to #matchJson, or be defined with auto-increase counter by #registerSnapshotNameTemplate.")
+      }
+      const nextCounter = (snapshotNameCounter[snapshotNameTemplate] || 0 ) + 1;
+      snapshotNameCounter[snapshotNameTemplate] = nextCounter;
+      snapshotName = `${snapshotNameTemplate} ${nextCounter}`;
+    }
+
     if (utils.flag(this, 'negate')) {
       throw new Error("`matchSnapshot` cannot be used with `.not`.");
     }
