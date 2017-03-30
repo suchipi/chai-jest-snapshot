@@ -42,11 +42,11 @@ describe("matchSnapshot", function() {
   // `assert` is a sinon.spy() that was made available to matchSnapshot as `this.assert`
   // `internal` is an object that contains any variables that were published by the match operation
   // for testing purposes.
-  const createMatchOperation = () => {
+  const createMatchOperation = (internalConfig) => {
     let assert = sinon.spy();
     let internal = {};
     let timesRan = 0;
-    const matchSnapshot = buildMatchSnapshot(utils);
+    const matchSnapshot = buildMatchSnapshot(utils, internalConfig);
 
     return {
       run() {
@@ -115,6 +115,85 @@ describe("matchSnapshot", function() {
     expect(operation.internal.snapshotFile[1]).to.be.an.instanceof(SnapshotFile);
     expect(operation.internal.snapshotFile[0] === operation.internal.snapshotFile[1]).to.be.true;
   };
+
+  describe("#registerSnapshotFileName", function() {
+    beforeEach(function(){
+      snapshotName = "snapshotFileName";
+    });
+    context("only #registerSnapshotFileName without #matchSnapshot param", function() {
+      it("uses from #registerSnapshotFileName", function() {
+        const testedFileName = workspacePath("nameFromConfig");
+        const operation = createMatchOperation({snapshotFileName: testedFileName});
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._filename).to.equal(testedFileName);
+      });
+    });
+    context("only #matchSnapshot param without #registerSnapshotFileName", function() {
+      it("uses from #matchSnapshot param", function() {
+        snapshotFileName = workspacePath("nameFromParam");
+        const operation = createMatchOperation();
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._filename).to.equal(snapshotFileName);
+      });
+    });
+    context("both #matchSnapshot param and #registerSnapshotFileName", function() {
+      it("uses from #matchSnapshot param", function() {
+        const testedFileName = workspacePath("nameFromConfig")
+        snapshotFileName = workspacePath("nameFromParam");
+        const operation = createMatchOperation({snapshotFileName: testedFileName});
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._filename).to.equal(snapshotFileName);
+      });
+    });
+    context("neither #matchSnapshot param nor #registerSnapshotFileName", function() {
+      it("throws error", function() {
+        const operation = createMatchOperation();
+        expect(operation.run).to.throw(Error, "Snapshot file name must be defined by #registerSnapshotFileName or as a param to #matchJson.");
+      });
+    });
+  });
+
+  describe("#registerSnapshotNameTemplate", function() {
+    beforeEach(function(){
+      snapshotFileName = workspacePath("snapshotFileName")
+    });
+    context("only #registerSnapshotNameTemplate without #matchSnapshot param", function() {
+      it("uses from #registerSnapshotNameTemplate and auto-increases", function() {
+        const testedSnapshotNameTemplate = "SnapshotNameTemplate";
+        const operation = createMatchOperation({snapshotNameTemplate: testedSnapshotNameTemplate});
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapshotNameTemplate 1");
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys(["SnapshotNameTemplate 1", "SnapshotNameTemplate 2"]);
+      });
+    });
+    context("only #matchSnapshot param without #registerSnapshotNameTemplate", function() {
+      it("uses from #matchSnapshot param and reuses the same name", function() {
+        snapshotName = "SnarpShotName";
+        const operation = createMatchOperation();
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnarpShotName");
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnarpShotName");
+      });
+    });
+    context("both #matchSnapshot param and #registerSnapshotNameTemplate", function() {
+      it("uses from #matchSnapshot param and reuses the same name", function() {
+        snapshotName = "SnarpShotName";
+        const operation = createMatchOperation({snapshotNameTemplate: "SnapshotNameTemplate"});
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnarpShotName");
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnarpShotName");
+      });
+    });
+    context("neither #matchSnapshot param nor #registerSnapshotFileName", function() {
+      it("throws error", function() {
+        const operation = createMatchOperation();
+        expect(operation.run).to.throw(Error, "Snapshot name must be available as a param to #matchJson, or be defined with auto-increase counter by #registerSnapshotNameTemplate.");
+      });
+    });
+  });
 
   describe("when the snapshot file exists", function() {
     beforeEach(function() {
