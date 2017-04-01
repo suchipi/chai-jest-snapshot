@@ -5,14 +5,12 @@ var internalConfig = {
 	snapshotNameTemplate: void 0,
 }
 
-module.exports = function(chai, utils) {
+const chaiJestSnapshot = function(chai, utils) {
   chai.Assertion.addMethod("matchSnapshot", buildMatchSnapshot(utils, internalConfig));
 };
 
-module.exports.registerSnapshotFileName = function(snapshotFileName) {
-	internalConfig.snapshotFileName = snapshotFileName
-}
+chaiJestSnapshot.registerSnapshotFileName = buildMatchSnapshot.registerSnapshotFileName;
+chaiJestSnapshot.registerSnapshotNameTemplate = buildMatchSnapshot.registerSnapshotNameTemplate;
+chaiJestSnapshot.registerMochaContext = buildMatchSnapshot.registerMochaContext;
 
-module.exports.registerSnapshotNameTemplate = function(snapshotNameTemplate) {
-	internalConfig.snapshotNameTemplate = snapshotNameTemplate
-}
+module.exports = chaiJestSnapshot;

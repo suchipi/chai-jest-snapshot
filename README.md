@@ -15,7 +15,7 @@ import chaiJestSnapshot from "chai-jest-snapshot";
 
 chai.use(chaiJestSnapshot);
 
-// if you want to use simple interface
+// if you want to use simple interface, but want to take control of snapshot filename
 chaiJestSnapshot.registerSnapshotFileName(__filename + ".snap");
 // \
 
@@ -34,6 +34,23 @@ describe("Link", function() {
   beforeEach(function(){
     // `this.currentTest.fullTitle()` assumes you are using mocha test runner
     chaiJestSnapshot.registerSnapshotNameTemplate(this.currentTest.fullTitle());
+    // \
+
+    /**
+     * or you can use #registerMochaContext, which is a short hand for both
+     * `chaiJestSnapshot.registerSnapshotNameTemplate(this.currentTest.fullTitle());`
+     * and
+     * `chaiJestSnapshot.registerSnapshotFileName(this.currentTest.file + ".snap")`;
+     * be careful that if you transpile your spec file (with webpack/gulp/babel, etc.),
+     * `__filename` and `this.currentTest.file` will not be the same
+     * `__filename` refers to your source file (if your transpiler is smart enough, I - @truongsinh - tested with webpack)
+     * while `this.currentTest.file` refers your built/dist file.
+     *
+     * `#registerMochaContext` can overide the other 2 methods, and vice versa, `last-write-wins`
+     */
+    chaiJestSnapshot.registerMochaContext(this);
+    // \
+});
   });
   // \
   it("renders correctly", () => {

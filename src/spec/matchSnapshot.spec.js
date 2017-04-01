@@ -42,11 +42,11 @@ describe("matchSnapshot", function() {
   // `assert` is a sinon.spy() that was made available to matchSnapshot as `this.assert`
   // `internal` is an object that contains any variables that were published by the match operation
   // for testing purposes.
-  const createMatchOperation = (internalConfig) => {
+  const createMatchOperation = () => {
     let assert = sinon.spy();
     let internal = {};
     let timesRan = 0;
-    const matchSnapshot = buildMatchSnapshot(utils, internalConfig);
+    const matchSnapshot = buildMatchSnapshot(utils);
 
     return {
       run() {
@@ -120,10 +120,14 @@ describe("matchSnapshot", function() {
     beforeEach(function(){
       snapshotName = "snapshotFileName";
     });
+    afterEach(function(){
+      buildMatchSnapshot.registerSnapshotFileName(void 0);
+    });
     context("only #registerSnapshotFileName without #matchSnapshot param", function() {
       it("uses from #registerSnapshotFileName", function() {
         const testedFileName = workspacePath("nameFromConfig");
-        const operation = createMatchOperation({snapshotFileName: testedFileName});
+        const operation = createMatchOperation();
+        buildMatchSnapshot.registerSnapshotFileName(testedFileName);
         operation.run();
         expect(operation.internal.snapshotFile[0]._filename).to.equal(testedFileName);
       });
@@ -140,7 +144,8 @@ describe("matchSnapshot", function() {
       it("uses from #matchSnapshot param", function() {
         const testedFileName = workspacePath("nameFromConfig")
         snapshotFileName = workspacePath("nameFromParam");
-        const operation = createMatchOperation({snapshotFileName: testedFileName});
+        const operation = createMatchOperation();
+        buildMatchSnapshot.registerSnapshotFileName(testedFileName);
         operation.run();
         expect(operation.internal.snapshotFile[0]._filename).to.equal(snapshotFileName);
       });
@@ -157,10 +162,14 @@ describe("matchSnapshot", function() {
     beforeEach(function(){
       snapshotFileName = workspacePath("snapshotFileName")
     });
+    afterEach(function(){
+      buildMatchSnapshot.registerSnapshotNameTemplate(void 0);
+    });
     context("only #registerSnapshotNameTemplate without #matchSnapshot param", function() {
       it("uses from #registerSnapshotNameTemplate and auto-increases", function() {
         const testedSnapshotNameTemplate = "SnapshotNameTemplate";
-        const operation = createMatchOperation({snapshotNameTemplate: testedSnapshotNameTemplate});
+        const operation = createMatchOperation();
+        buildMatchSnapshot.registerSnapshotNameTemplate(testedSnapshotNameTemplate)
         operation.run();
         expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapshotNameTemplate 1");
         operation.run();
@@ -180,7 +189,8 @@ describe("matchSnapshot", function() {
     context("both #matchSnapshot param and #registerSnapshotNameTemplate", function() {
       it("uses from #matchSnapshot param and reuses the same name", function() {
         snapshotName = "SnarpShotName";
-        const operation = createMatchOperation({snapshotNameTemplate: "SnapshotNameTemplate"});
+        const operation = createMatchOperation();
+        buildMatchSnapshot.registerSnapshotNameTemplate("SnapshotNameTemplate")
         operation.run();
         expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnarpShotName");
         operation.run();
@@ -191,6 +201,27 @@ describe("matchSnapshot", function() {
       it("throws error", function() {
         const operation = createMatchOperation();
         expect(operation.run).to.throw(Error, "Snapshot name must be available as a param to #matchJson, or be defined with auto-increase counter by #registerSnapshotNameTemplate.");
+      });
+    });
+  });
+
+  describe("#registerMochaContext", function() {
+    beforeEach(function(){
+      buildMatchSnapshot.registerMochaContext(this);
+    });
+    afterEach(function(){
+      buildMatchSnapshot.registerSnapshotFileName(void 0);
+      buildMatchSnapshot.registerSnapshotNameTemplate(void 0);
+    });
+    context("even deep inside other context/desribe", function() {
+      it("uses info from filename and testname from mocha context", function() {
+        const testedFileName = (__filename + ".snap")
+          // this file is in "src", but mocha run the built file, in "dist"
+          .replace("src", "dist");
+        const operation = createMatchOperation();
+        operation.run();
+        expect(operation.internal.snapshotFile[0]._filename).to.equal(testedFileName);
+        expect(operation.internal.snapshotFile[0]._content).to.have.keys("matchSnapshot #registerMochaContext even deep inside other context/desribe uses info from filename and testname from mocha context 1");
       });
     });
   });
