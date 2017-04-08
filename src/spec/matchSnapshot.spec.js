@@ -121,7 +121,7 @@ describe("matchSnapshot", function() {
       snapshotName = "snapshotFileName";
     });
     afterEach(function(){
-      buildMatchSnapshot.registerSnapshotFileName(void 0);
+      buildMatchSnapshot.registerSnapshotFileName(undefined);
     });
     context("only #registerSnapshotFileName without #matchSnapshot param", function() {
       it("uses from #registerSnapshotFileName", function() {
@@ -163,7 +163,7 @@ describe("matchSnapshot", function() {
       snapshotFileName = workspacePath("snapshotFileName")
     });
     afterEach(function(){
-      buildMatchSnapshot.registerSnapshotNameTemplate(void 0);
+      buildMatchSnapshot.registerSnapshotNameTemplate(undefined);
     });
     context("only #registerSnapshotNameTemplate without #matchSnapshot param", function() {
       it("uses from #registerSnapshotNameTemplate and auto-increases", function() {
@@ -210,8 +210,8 @@ describe("matchSnapshot", function() {
       buildMatchSnapshot.registerMochaContext(this);
     });
     afterEach(function(){
-      buildMatchSnapshot.registerSnapshotFileName(void 0);
-      buildMatchSnapshot.registerSnapshotNameTemplate(void 0);
+      buildMatchSnapshot.registerSnapshotFileName(undefined);
+      buildMatchSnapshot.registerSnapshotNameTemplate(undefined);
     });
     context("even deep inside other context/desribe", function() {
       it("uses info from filename and testname from mocha context", function() {

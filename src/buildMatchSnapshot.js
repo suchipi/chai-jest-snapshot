@@ -4,8 +4,8 @@ import values from "lodash.values";
 
 const snapshotNameCounter = {};
 const internalConfig = {
-  snapshotFileName: void 0,
-  snapshotNameTemplate: void 0,
+  snapshotFileName: undefined,
+  snapshotNameTemplate: undefined,
 };
 
 const buildMatchSnapshot = (utils) => {
