@@ -14,12 +14,12 @@ const buildMatchSnapshot = (utils) => {
   return function matchSnapshot(snapshotFileName, snapshotName, update) {
     snapshotFileName = snapshotFileName || internalConfig.snapshotFileName;
     if (!snapshotFileName) {
-      throw new Error("Snapshot file name must be defined by #registerSnapshotFileName or as a param to #matchJson.")
+      throw new Error("Snapshot file name must be defined by #registerSnapshotFileName or as a param to #matchJson.");
     }
     if (!snapshotName) {
       const snapshotNameTemplate = internalConfig.snapshotNameTemplate;
       if (!snapshotNameTemplate) {
-        throw new Error("Snapshot name must be available as a param to #matchJson, or be defined with auto-increase counter by #registerSnapshotNameTemplate.")
+        throw new Error("Snapshot name must be available as a param to #matchJson, or be defined with auto-increase counter by #registerSnapshotNameTemplate.");
       }
       const nextCounter = (snapshotNameCounter[snapshotNameTemplate] || 0 ) + 1;
       snapshotNameCounter[snapshotNameTemplate] = nextCounter;
@@ -77,16 +77,16 @@ const buildMatchSnapshot = (utils) => {
 
 buildMatchSnapshot.registerSnapshotFileName = function(snapshotFileName) {
   internalConfig.snapshotFileName = snapshotFileName
-}
+};
 
 buildMatchSnapshot.registerSnapshotNameTemplate = function(snapshotNameTemplate) {
   internalConfig.snapshotNameTemplate = snapshotNameTemplate
-}
+};
 
 buildMatchSnapshot.registerMochaContext = function(mochaContext) {
   const { currentTest } = mochaContext;
   buildMatchSnapshot.registerSnapshotFileName(currentTest.file + ".snap");
   buildMatchSnapshot.registerSnapshotNameTemplate(currentTest.fullTitle());
-}
+};
 
 export default buildMatchSnapshot;
