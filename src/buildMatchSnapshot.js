@@ -1,29 +1,12 @@
 import path from "path";
-import SnapshotFile from "./SnapshotFile";
 import values from "lodash.values";
+import SnapshotFile from "./SnapshotFile";
 
-const buildMatchSnapshot = (utils) => {
+const buildMatchSnapshot = (utils, parseArgs) => {
   const snapshotFiles = {};
-  const snapshotNameCounter = {};
-  const internalConfig = {
-    snapshotFileName: undefined,
-    snapshotNameTemplate: undefined,
-  };
 
-  function matchSnapshot(snapshotFileName, snapshotName, update) {
-    snapshotFileName = snapshotFileName || internalConfig.snapshotFileName;
-    if (!snapshotFileName) {
-      throw new Error("Snapshot file name must be defined by #registerSnapshotFileName or as a param to #matchJson.");
-    }
-    if (!snapshotName) {
-      const snapshotNameTemplate = internalConfig.snapshotNameTemplate;
-      if (!snapshotNameTemplate) {
-        throw new Error("Snapshot name must be available as a param to #matchJson, or be defined with auto-increase counter by #registerSnapshotNameTemplate.");
-      }
-      const nextCounter = (snapshotNameCounter[snapshotNameTemplate] || 0 ) + 1;
-      snapshotNameCounter[snapshotNameTemplate] = nextCounter;
-      snapshotName = `${snapshotNameTemplate} ${nextCounter}`;
-    }
+  function matchSnapshot(...args) {
+    const { snapshotFileName, snapshotName, update } = parseArgs(args);
 
     if (utils.flag(this, 'negate')) {
       throw new Error("`matchSnapshot` cannot be used with `.not`.");
@@ -55,9 +38,7 @@ const buildMatchSnapshot = (utils) => {
       pass = true;
     }
 
-    const shouldUpdate = update || (typeof process !== "undefined" && process.env && process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL);
-
-    if (!pass && shouldUpdate) {
+    if (!pass && update) {
       snapshotFile.add(snapshotName, obj);
       snapshotFile.save();
       pass = true;
@@ -73,26 +54,7 @@ const buildMatchSnapshot = (utils) => {
     );
   };
 
-  function registerSnapshotFileName(snapshotFileName) {
-    internalConfig.snapshotFileName = snapshotFileName
-  };
-
-  function registerSnapshotNameTemplate(snapshotNameTemplate) {
-    internalConfig.snapshotNameTemplate = snapshotNameTemplate
-  };
-
-  function registerMochaContext(mochaContext) {
-    const { currentTest } = mochaContext;
-    registerSnapshotFileName(currentTest.file + ".snap");
-    registerSnapshotNameTemplate(currentTest.fullTitle());
-  };
-
-  return {
-    matchSnapshot,
-    registerSnapshotFileName,
-    registerSnapshotNameTemplate,
-    registerMochaContext,
-  };
+  return matchSnapshot;
 };
 
 export default buildMatchSnapshot;

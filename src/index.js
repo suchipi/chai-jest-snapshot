@@ -1,13 +1,16 @@
 import buildMatchSnapshot from "./buildMatchSnapshot";
+import buildConfigState from "./buildConfigState";
+import determineConfig from "./determineConfig";
 
 function chaiJestSnapshot(chai, utils) {
   const {
-    matchSnapshot,
     registerSnapshotFileName,
     registerSnapshotNameTemplate,
     registerMochaContext,
-  } = buildMatchSnapshot(utils);
+    parseArgs,
+  } = buildConfigState(determineConfig);
 
+  const matchSnapshot = buildMatchSnapshot(utils, parseArgs);
   chai.Assertion.addMethod("matchSnapshot", matchSnapshot);
 
   // Kinda weird; mutates the exports to have the configuration functions on it

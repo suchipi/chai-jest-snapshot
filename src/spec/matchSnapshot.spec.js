@@ -37,6 +37,12 @@ describe("matchSnapshot", function() {
   let update;
   let utils;
 
+  const parseArgs = () => ({
+    snapshotFileName,
+    snapshotName,
+    update,
+  });
+
   // Creates object with shape: { run, assert }
   // `run` will call matchSnapshot with its value of `this` stubbed appropriately
   // `assert` is a sinon.spy() that was made available to matchSnapshot as `this.assert`
@@ -46,12 +52,7 @@ describe("matchSnapshot", function() {
     let assert = sinon.spy();
     let internal = {};
     let timesRan = 0;
-    const {
-      matchSnapshot,
-      registerSnapshotFileName,
-      registerSnapshotNameTemplate,
-      registerMochaContext,
-    } = buildMatchSnapshot(utils);
+    const matchSnapshot = buildMatchSnapshot(utils, parseArgs);
 
     return {
       run() {
@@ -62,14 +63,11 @@ describe("matchSnapshot", function() {
             internal[name] = internal[name] || [];
             internal[name][timesRan] = value;
           }
-        }, snapshotFileName, snapshotName, update);
+        });
         timesRan++;
       },
       assert,
       internal,
-      registerSnapshotFileName,
-      registerSnapshotNameTemplate,
-      registerMochaContext,
     };
   };
 
@@ -105,7 +103,6 @@ describe("matchSnapshot", function() {
     snapshotName = undefined;
     update = false;
     utils = { flag: () => undefined };
-    delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
   });
 
   afterEach(function() {
@@ -170,34 +167,24 @@ describe("matchSnapshot", function() {
 
         it("the assertion does not pass", expectFailure('"something other than tree"'));
 
-        const expectOverwritesSnapshot = () => {
-          createMatchOperation().run();
-          let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
-          let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
-          expect(snapshotFileContent).to.equal(expectedContent);
-        }
-
         describe("and the 'update' flag set to true", function() {
           beforeEach(function() {
             update = true;
           });
 
-          it("overwrites the snapshot with the new content", expectOverwritesSnapshot);
+          it("overwrites the snapshot with the new content", function() {
+            createMatchOperation().run();
+            let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
+            let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
+            expect(snapshotFileContent).to.equal(expectedContent);
+          });
+
           it("the assertion passes", expectPass)
         });
 
         describe("and the 'update' flag not set to true", function() {
           beforeEach(function() {
             update = undefined;
-          });
-
-          describe("but the environment variable CHAI_JEST_SNAPSHOT_UPDATE_ALL set", function() {
-            beforeEach(function() {
-              process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
-            });
-
-            it("overwrites the snapshot with the new content", expectOverwritesSnapshot);
-            it("the assertion passes", expectPass)
           });
         });
 
@@ -254,119 +241,5 @@ describe("matchSnapshot", function() {
     });
 
     it("the assertion passes", expectPass);
-  });
-
-  describe("registerSnapshotFileName", function() {
-    beforeEach(function(){
-      snapshotName = "snapshotFileName";
-    });
-
-    describe("only registerSnapshotFileName without matchSnapshot param", function() {
-      it("uses from registerSnapshotFileName", function() {
-        const testedFileName = workspacePath("nameFromConfig");
-        const operation = createMatchOperation();
-        operation.registerSnapshotFileName(testedFileName);
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._filename).to.equal(testedFileName);
-      });
-    });
-
-    describe("only matchSnapshot param without registerSnapshotFileName", function() {
-      it("uses from matchSnapshot param", function() {
-        snapshotFileName = workspacePath("nameFromParam");
-        const operation = createMatchOperation();
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._filename).to.equal(snapshotFileName);
-      });
-    });
-
-    describe("both matchSnapshot param and registerSnapshotFileName", function() {
-      it("uses from matchSnapshot param", function() {
-        const testedFileName = workspacePath("nameFromConfig")
-        snapshotFileName = workspacePath("nameFromParam");
-        const operation = createMatchOperation();
-        operation.registerSnapshotFileName(testedFileName);
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._filename).to.equal(snapshotFileName);
-      });
-    });
-
-    describe("neither matchSnapshot param nor registerSnapshotFileName", function() {
-      it("throws error", function() {
-        const operation = createMatchOperation();
-        expect(operation.run).to.throw(Error);
-      });
-    });
-  });
-
-  describe("registerSnapshotNameTemplate", function() {
-    beforeEach(function(){
-      snapshotFileName = workspacePath("snapshotFileName")
-    });
-
-    describe("only registerSnapshotNameTemplate without matchSnapshot param", function() {
-      it("uses from registerSnapshotNameTemplate and auto-increases", function() {
-        const testedSnapshotNameTemplate = "SnapshotNameTemplate";
-        const operation = createMatchOperation();
-        operation.registerSnapshotNameTemplate(testedSnapshotNameTemplate)
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapshotNameTemplate 1");
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys(["SnapshotNameTemplate 1", "SnapshotNameTemplate 2"]);
-      });
-    });
-
-    describe("only matchSnapshot param without registerSnapshotNameTemplate", function() {
-      it("uses from matchSnapshot param and reuses the same name", function() {
-        snapshotName = "SnapShotName";
-        const operation = createMatchOperation();
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapShotName");
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapShotName");
-      });
-    });
-
-    describe("both matchSnapshot param and registerSnapshotNameTemplate", function() {
-      it("uses from matchSnapshot param and reuses the same name", function() {
-        snapshotName = "SnapShotName";
-        const operation = createMatchOperation();
-        operation.registerSnapshotNameTemplate("SnapshotNameTemplate")
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapShotName");
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys("SnapShotName");
-      });
-    });
-
-    describe("neither matchSnapshot param nor registerSnapshotFileName", function() {
-      it("throws error", function() {
-        const operation = createMatchOperation();
-        expect(operation.run).to.throw(Error);
-      });
-    });
-  });
-
-  describe("registerMochaContext", function() {
-    let operation;
-    beforeEach(function(){
-      operation = createMatchOperation();
-      operation.registerMochaContext(this);
-    });
-
-    afterEach(function(){
-      operation = undefined;
-    });
-
-    describe("even deep inside other context/desribe", function() {
-      it("uses info from filename and testname from mocha context", function() {
-        const testedFileName = (__filename + ".snap")
-          // this file is in "src", but mocha run the built file, in "dist"
-          .replace("src", "dist");
-        operation.run();
-        expect(operation.internal.snapshotFile[0]._filename).to.equal(testedFileName);
-        expect(operation.internal.snapshotFile[0]._content).to.have.keys("matchSnapshot registerMochaContext even deep inside other context/desribe uses info from filename and testname from mocha context 1");
-      });
-    });
   });
 });
