@@ -1,16 +1,33 @@
 import buildMatchSnapshot from "./buildMatchSnapshot";
 
-var internalConfig = {
-  snapshotFileName: undefined,
-  snapshotNameTemplate: undefined,
+function chaiJestSnapshot(chai, utils) {
+  const {
+    matchSnapshot,
+    registerSnapshotFileName,
+    registerSnapshotNameTemplate,
+    registerMochaContext,
+  } = buildMatchSnapshot(utils);
+
+  chai.Assertion.addMethod("matchSnapshot", matchSnapshot);
+
+  // Kinda weird; mutates the exports to have the configuration functions on it
+  // once you've calles this once (by passing it into chai.use). Until you have,
+  // the template methods defined below are called instead.
+  chaiJestSnapshot.registerSnapshotFileName = registerSnapshotFileName;
+  chaiJestSnapshot.registerSnapshotNameTemplate = registerSnapshotNameTemplate;
+  chaiJestSnapshot.registerMochaContext = registerMochaContext;
 };
 
-const chaiJestSnapshot = function(chai, utils) {
-  chai.Assertion.addMethod("matchSnapshot", buildMatchSnapshot(utils, internalConfig));
-};
+chaiJestSnapshot.registerSnapshotFileName = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerSnapshotFileName`");
+}
 
-chaiJestSnapshot.registerSnapshotFileName = buildMatchSnapshot.registerSnapshotFileName;
-chaiJestSnapshot.registerSnapshotNameTemplate = buildMatchSnapshot.registerSnapshotNameTemplate;
-chaiJestSnapshot.registerMochaContext = buildMatchSnapshot.registerMochaContext;
+chaiJestSnapshot.registerSnapshotNameTemplate = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerSnapshotNameTemplate`");
+}
+
+chaiJestSnapshot.registerMochaContext = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerMochaContext`");
+}
 
 module.exports = chaiJestSnapshot;

@@ -2,16 +2,15 @@ import path from "path";
 import SnapshotFile from "./SnapshotFile";
 import values from "lodash.values";
 
-const snapshotNameCounter = {};
-const internalConfig = {
-  snapshotFileName: undefined,
-  snapshotNameTemplate: undefined,
-};
-
 const buildMatchSnapshot = (utils) => {
   const snapshotFiles = {};
+  const snapshotNameCounter = {};
+  const internalConfig = {
+    snapshotFileName: undefined,
+    snapshotNameTemplate: undefined,
+  };
 
-  return function matchSnapshot(snapshotFileName, snapshotName, update) {
+  function matchSnapshot(snapshotFileName, snapshotName, update) {
     snapshotFileName = snapshotFileName || internalConfig.snapshotFileName;
     if (!snapshotFileName) {
       throw new Error("Snapshot file name must be defined by #registerSnapshotFileName or as a param to #matchJson.");
@@ -71,22 +70,29 @@ const buildMatchSnapshot = (utils) => {
       matches && matches.expected && matches.expected.trim(),
       matches && matches.actual && matches.actual.trim(),
       matches && true
-    )
+    );
   };
-};
 
-buildMatchSnapshot.registerSnapshotFileName = function(snapshotFileName) {
-  internalConfig.snapshotFileName = snapshotFileName
-};
+  function registerSnapshotFileName(snapshotFileName) {
+    internalConfig.snapshotFileName = snapshotFileName
+  };
 
-buildMatchSnapshot.registerSnapshotNameTemplate = function(snapshotNameTemplate) {
-  internalConfig.snapshotNameTemplate = snapshotNameTemplate
-};
+  function registerSnapshotNameTemplate(snapshotNameTemplate) {
+    internalConfig.snapshotNameTemplate = snapshotNameTemplate
+  };
 
-buildMatchSnapshot.registerMochaContext = function(mochaContext) {
-  const { currentTest } = mochaContext;
-  buildMatchSnapshot.registerSnapshotFileName(currentTest.file + ".snap");
-  buildMatchSnapshot.registerSnapshotNameTemplate(currentTest.fullTitle());
+  function registerMochaContext(mochaContext) {
+    const { currentTest } = mochaContext;
+    registerSnapshotFileName(currentTest.file + ".snap");
+    registerSnapshotNameTemplate(currentTest.fullTitle());
+  };
+
+  return {
+    matchSnapshot,
+    registerSnapshotFileName,
+    registerSnapshotNameTemplate,
+    registerMochaContext,
+  };
 };
 
 export default buildMatchSnapshot;
