@@ -4,8 +4,8 @@ import values from "lodash.values";
 
 const snapshotNameCounter = {};
 const internalConfig = {
-	snapshotFileName: void 0,
-	snapshotNameTemplate: void 0,
+  snapshotFileName: void 0,
+  snapshotNameTemplate: void 0,
 };
 
 const buildMatchSnapshot = (utils) => {
@@ -76,17 +76,17 @@ const buildMatchSnapshot = (utils) => {
 };
 
 buildMatchSnapshot.registerSnapshotFileName = function(snapshotFileName) {
-	internalConfig.snapshotFileName = snapshotFileName
+  internalConfig.snapshotFileName = snapshotFileName
 }
 
 buildMatchSnapshot.registerSnapshotNameTemplate = function(snapshotNameTemplate) {
-	internalConfig.snapshotNameTemplate = snapshotNameTemplate
+  internalConfig.snapshotNameTemplate = snapshotNameTemplate
 }
 
 buildMatchSnapshot.registerMochaContext = function(mochaContext) {
-	const { currentTest } = mochaContext;
-	buildMatchSnapshot.registerSnapshotFileName(currentTest.file + ".snap");
-	buildMatchSnapshot.registerSnapshotNameTemplate(currentTest.fullTitle());
+  const { currentTest } = mochaContext;
+  buildMatchSnapshot.registerSnapshotFileName(currentTest.file + ".snap");
+  buildMatchSnapshot.registerSnapshotNameTemplate(currentTest.fullTitle());
 }
 
 export default buildMatchSnapshot;

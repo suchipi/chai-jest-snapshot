@@ -1,8 +1,8 @@
 import buildMatchSnapshot from "./buildMatchSnapshot";
 
 var internalConfig = {
-	snapshotFileName: void 0,
-	snapshotNameTemplate: void 0,
+  snapshotFileName: void 0,
+  snapshotNameTemplate: void 0,
 }
 
 const chaiJestSnapshot = function(chai, utils) {
