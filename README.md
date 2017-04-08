@@ -23,7 +23,7 @@ import chaiJestSnapshot from "chai-jest-snapshot";
 chai.use(chaiJestSnapshot);
 
 beforeEach(function() {
-  chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext(this);
+  chaiJestSnapshot.configureUsingMochaContext(this);
 });
 ```
 

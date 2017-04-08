@@ -7,7 +7,7 @@ beforeEach(function() {
   // that you can call once in a global beforeEach in your test helper file.
   // It will use the current file + ".spec" as the filename and the current
   // test name as the test name.
-  chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext(this);
+  chaiJestSnapshot.configureUsingMochaContext(this);
   // With that in place, you don't need to do any additional configuration in your spec files.
   //
   // Make sure not to use an arrow function in the beforeEach, or you won't

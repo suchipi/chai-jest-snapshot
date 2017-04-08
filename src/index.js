@@ -5,7 +5,7 @@ import determineConfig from "./determineConfig";
 let hasChaiJestSnapshotBeenUsed = false;
 let configuredSetFilename;
 let configuredSetTestName;
-let configuredSetFilenameAndTestNameUsingMochaContext;
+let configuredConfigureUsingMochaContext;
 
 function chaiJestSnapshot(chai, utils) {
   if (hasChaiJestSnapshotBeenUsed) {
@@ -15,7 +15,7 @@ function chaiJestSnapshot(chai, utils) {
   const {
     setFilename,
     setTestName,
-    setFilenameAndTestNameUsingMochaContext,
+    configureUsingMochaContext,
     parseArgs,
   } = buildConfigState(determineConfig);
 
@@ -24,14 +24,14 @@ function chaiJestSnapshot(chai, utils) {
 
   configuredSetFilename = setFilename;
   configuredSetTestName = setTestName;
-  configuredSetFilenameAndTestNameUsingMochaContext;
+  configuredConfigureUsingMochaContext = configureUsingMochaContext;
 
   hasChaiJestSnapshotBeenUsed = true;
 };
 
 chaiJestSnapshot.setFilename = function setFilename() {
   if (configuredSetFilename) {
-    configuredSetFilename.call(this, arguments);
+    configuredSetFilename.apply(this, arguments);
   } else {
     throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setFilename`.");
   }
@@ -39,17 +39,17 @@ chaiJestSnapshot.setFilename = function setFilename() {
 
 chaiJestSnapshot.setTestName = function setTestName() {
   if (configuredSetTestName) {
-    configuredSetTestName.call(this, arguments);
+    configuredSetTestName.apply(this, arguments);
   } else {
     throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setTestName`.");
   }
 }
 
-chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext = function setFilenameAndTestNameUsingMochaContext() {
-  if (configuredSetFilenameAndTestNameUsingMochaContext) {
-    configuredSetFilenameAndTestNameUsingMochaContext.call(this, arguments);
+chaiJestSnapshot.configureUsingMochaContext = function configureUsingMochaContext() {
+  if (configuredConfigureUsingMochaContext) {
+    configuredConfigureUsingMochaContext.apply(this, arguments);
   } else {
-    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext`.");
+    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.configureUsingMochaContext`.");
   }
 }
 

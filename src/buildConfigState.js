@@ -14,7 +14,7 @@ module.exports = function buildConfigState(determineConfig) {
     config.snapshotNameTemplate = snapshotNameTemplate
   }
 
-  function setFilenameAndTestNameUsingMochaContext(mochaContext) {
+  function configureUsingMochaContext(mochaContext) {
     const { currentTest } = mochaContext;
     setFilename(currentTest.file + ".snap");
     setTestName(currentTest.fullTitle());
@@ -30,7 +30,7 @@ module.exports = function buildConfigState(determineConfig) {
   return {
     setFilename,
     setTestName,
-    setFilenameAndTestNameUsingMochaContext,
+    configureUsingMochaContext,
     parseArgs,
   };
 }
