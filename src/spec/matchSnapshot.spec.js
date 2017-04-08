@@ -32,13 +32,13 @@ const NONEXISTANT_SNAPSHOT_NAME = "ExampleComponent throws rubber chickens";
 
 describe("matchSnapshot", function() {
   let object;
-  let snapshotFileName;
+  let snapshotFilename;
   let snapshotName;
   let update;
   let utils;
 
   const parseArgs = () => ({
-    snapshotFileName,
+    snapshotFilename,
     snapshotName,
     update,
   });
@@ -99,7 +99,7 @@ describe("matchSnapshot", function() {
     existingSnapshotFile.save();
 
     object = undefined;
-    snapshotFileName = undefined;
+    snapshotFilename = undefined;
     snapshotName = undefined;
     update = false;
     utils = { flag: () => undefined };
@@ -123,7 +123,7 @@ describe("matchSnapshot", function() {
 
   describe("when the snapshot file exists", function() {
     beforeEach(function() {
-      snapshotFileName = EXISTING_SNAPSHOT_PATH;
+      snapshotFilename = EXISTING_SNAPSHOT_PATH;
     });
 
     it("uses the same snapshotFile instance across multiple runs (#2)", expectUsesSameInstance);
@@ -158,7 +158,7 @@ describe("matchSnapshot", function() {
 
         function doesNotOverwriteSnapshot() {
           createMatchOperation().run();
-          let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
+          let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
           let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n${prettyTree}\n\`;\n`;
           expect(snapshotFileContent).to.equal(expectedContent);
         }
@@ -174,7 +174,7 @@ describe("matchSnapshot", function() {
 
           it("overwrites the snapshot with the new content", function() {
             createMatchOperation().run();
-            let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
+            let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
             let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
             expect(snapshotFileContent).to.equal(expectedContent);
           });
@@ -190,7 +190,7 @@ describe("matchSnapshot", function() {
 
         describe("and a relative path is used (#1)", function() {
           beforeEach(function() {
-            snapshotFileName = EXISTING_SNAPSHOT_RELATIVE_PATH;
+            snapshotFilename = EXISTING_SNAPSHOT_RELATIVE_PATH;
           });
 
           it("does not overwrite the snapshot with the new content", doesNotOverwriteSnapshot);
@@ -208,7 +208,7 @@ describe("matchSnapshot", function() {
 
       it("adds the snapshot to the file", function() {
         createMatchOperation().run();
-        let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
+        let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
         let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n` +
           prettyTree +
           `\n\`;\n\n` +
@@ -224,7 +224,7 @@ describe("matchSnapshot", function() {
 
   describe("when the snapshot file does not exist", function() {
     beforeEach(function() {
-      snapshotFileName = NONEXISTANT_SNAPSHOT_PATH;
+      snapshotFilename = NONEXISTANT_SNAPSHOT_PATH;
       snapshotName = NONEXISTANT_SNAPSHOT_NAME;
       object = tree;
     });
@@ -233,7 +233,7 @@ describe("matchSnapshot", function() {
 
     it("a new snapshot file is created with the snapshot content", function() {
       createMatchOperation().run();
-      let snapshotFileContent = fs.readFileSync(snapshotFileName, 'utf8');
+      let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
       let expectedContent = `exports[\`${NONEXISTANT_SNAPSHOT_NAME}\`] = \`\n` +
         prettyTree +
         `\n\`;\n`;

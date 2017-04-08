@@ -2,12 +2,12 @@ import buildGetNameForSnapshotUsingTemplate from "./buildGetNameForSnapshotUsing
 
 module.exports = function buildConfigState(determineConfig) {
   const config = {
-    snapshotFileName: undefined,
+    snapshotFilename: undefined,
     snapshotNameTemplate: undefined,
   };
 
-  function registerSnapshotFileName(snapshotFileName) {
-    config.snapshotFileName = snapshotFileName
+  function registerSnapshotFilename(snapshotFilename) {
+    config.snapshotFilename = snapshotFilename
   }
 
   function registerSnapshotNameTemplate(snapshotNameTemplate) {
@@ -16,7 +16,7 @@ module.exports = function buildConfigState(determineConfig) {
 
   function registerMochaContext(mochaContext) {
     const { currentTest } = mochaContext;
-    registerSnapshotFileName(currentTest.file + ".snap");
+    registerSnapshotFilename(currentTest.file + ".snap");
     registerSnapshotNameTemplate(currentTest.fullTitle());
   }
 
@@ -28,7 +28,7 @@ module.exports = function buildConfigState(determineConfig) {
   }
 
   return {
-    registerSnapshotFileName,
+    registerSnapshotFilename,
     registerSnapshotNameTemplate,
     registerMochaContext,
     parseArgs,

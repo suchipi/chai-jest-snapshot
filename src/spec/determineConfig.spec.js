@@ -36,7 +36,7 @@ describe("determineConfig", function() {
         config: {},
         envFlag: false,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: "name",
           update: false,
         },
@@ -46,7 +46,7 @@ describe("determineConfig", function() {
         config: {},
         envFlag: true,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: "name",
           update: true,
         },
@@ -56,7 +56,7 @@ describe("determineConfig", function() {
         config: {},
         envFlag: false,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: "name",
           update: true,
         },
@@ -66,7 +66,7 @@ describe("determineConfig", function() {
         config: {},
         envFlag: true,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: "name",
           update: true,
         },
@@ -75,25 +75,25 @@ describe("determineConfig", function() {
       // * filename determined but not snapshot name
       {
         args: [],
-        config: { snapshotFileName: "filename" },
+        config: { snapshotFilename: "filename" },
         envFlag: false,
         expected: Error,
       },
       {
         args: [],
-        config: { snapshotFileName: "filename" },
+        config: { snapshotFilename: "filename" },
         envFlag: true,
         expected: Error,
       },
       {
         args: [true],
-        config: { snapshotFileName: "filename" },
+        config: { snapshotFilename: "filename" },
         envFlag: false,
         expected: Error,
       },
       {
         args: [false],
-        config: { snapshotFileName: "filename" },
+        config: { snapshotFilename: "filename" },
         envFlag: false,
         expected: Error,
       },
@@ -126,12 +126,12 @@ describe("determineConfig", function() {
       {
         args: [],
         config: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
         envFlag: false,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: false,
         },
@@ -139,12 +139,12 @@ describe("determineConfig", function() {
       {
         args: [],
         config: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
         envFlag: true,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: true,
         },
@@ -152,12 +152,12 @@ describe("determineConfig", function() {
       {
         args: [true],
         config: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
         envFlag: false,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: true,
         },
@@ -165,12 +165,12 @@ describe("determineConfig", function() {
       {
         args: [false],
         config: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
         envFlag: true,
         expected: {
-          snapshotFileName: "filename",
+          snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: true,
         },
@@ -200,7 +200,7 @@ describe("determineConfig", function() {
           it("returns the expected values", function() {
             const actual = run();
             const { expected } = example;
-            expect(actual.snapshotFileName).to.equal(expected.snapshotFileName);
+            expect(actual.snapshotFilename).to.equal(expected.snapshotFilename);
             expect(actual.snapshotName).to.equal(expected.snapshotName);
             expect(actual.update).to.equal(expected.update);
           });

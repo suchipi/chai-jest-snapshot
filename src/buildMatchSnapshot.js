@@ -6,14 +6,14 @@ const buildMatchSnapshot = (utils, parseArgs) => {
   const snapshotFiles = {};
 
   function matchSnapshot(...args) {
-    const { snapshotFileName, snapshotName, update } = parseArgs(args);
+    const { snapshotFilename, snapshotName, update } = parseArgs(args);
 
     if (utils.flag(this, 'negate')) {
       throw new Error("`matchSnapshot` cannot be used with `.not`.");
     }
 
     const obj = this._obj;
-    const absolutePathToSnapshot = path.resolve(snapshotFileName);
+    const absolutePathToSnapshot = path.resolve(snapshotFilename);
     let snapshotFile;
     if (snapshotFiles[absolutePathToSnapshot]) {
       snapshotFile = snapshotFiles[absolutePathToSnapshot];

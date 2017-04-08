@@ -1,10 +1,10 @@
 module.exports = function buildGetNameForSnapshotUsingTemplate(snapshotNameRegistry) {
-  return function getNameForSnapshotUsingTemplate(snapshotFileName, snapshotNameTemplate) {
-    if (snapshotNameRegistry[snapshotFileName] == null) {
-      snapshotNameRegistry[snapshotFileName] = {};
+  return function getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate) {
+    if (snapshotNameRegistry[snapshotFilename] == null) {
+      snapshotNameRegistry[snapshotFilename] = {};
     }
-    const nextCounter = (snapshotNameRegistry[snapshotFileName][snapshotNameTemplate] || 0) + 1;
-    snapshotNameRegistry[snapshotFileName][snapshotNameTemplate] = nextCounter;
+    const nextCounter = (snapshotNameRegistry[snapshotFilename][snapshotNameTemplate] || 0) + 1;
+    snapshotNameRegistry[snapshotFilename][snapshotNameTemplate] = nextCounter;
 
     return `${snapshotNameTemplate} ${nextCounter}`;
   }

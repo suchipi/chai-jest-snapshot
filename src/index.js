@@ -4,7 +4,7 @@ import determineConfig from "./determineConfig";
 
 function chaiJestSnapshot(chai, utils) {
   const {
-    registerSnapshotFileName,
+    registerSnapshotFilename,
     registerSnapshotNameTemplate,
     registerMochaContext,
     parseArgs,
@@ -16,13 +16,13 @@ function chaiJestSnapshot(chai, utils) {
   // Kinda weird; mutates the exports to have the configuration functions on it
   // once you've calles this once (by passing it into chai.use). Until you have,
   // the template methods defined below are called instead.
-  chaiJestSnapshot.registerSnapshotFileName = registerSnapshotFileName;
+  chaiJestSnapshot.registerSnapshotFilename = registerSnapshotFilename;
   chaiJestSnapshot.registerSnapshotNameTemplate = registerSnapshotNameTemplate;
   chaiJestSnapshot.registerMochaContext = registerMochaContext;
 };
 
-chaiJestSnapshot.registerSnapshotFileName = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerSnapshotFileName`");
+chaiJestSnapshot.registerSnapshotFilename = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerSnapshotFilename`");
 }
 
 chaiJestSnapshot.registerSnapshotNameTemplate = function() {
