@@ -2,7 +2,16 @@ import buildMatchSnapshot from "./buildMatchSnapshot";
 import buildConfigState from "./buildConfigState";
 import determineConfig from "./determineConfig";
 
+let hasChaiJestSnapshotBeenUsed = false;
+let configuredSetFilename;
+let configuredSetTestName;
+let configuredSetFilenameAndTestNameUsingMochaContext;
+
 function chaiJestSnapshot(chai, utils) {
+  if (hasChaiJestSnapshotBeenUsed) {
+    throw new Error("Running `chai.use(chaiJestSnapshot)` more than once is not supported.");
+  }
+
   const {
     setFilename,
     setTestName,
@@ -13,24 +22,35 @@ function chaiJestSnapshot(chai, utils) {
   const matchSnapshot = buildMatchSnapshot(utils, parseArgs);
   chai.Assertion.addMethod("matchSnapshot", matchSnapshot);
 
-  // Kinda weird; mutates the exports to have the configuration functions on it
-  // once you've calles this once (by passing it into chai.use). Until you have,
-  // the template methods defined below are called instead.
-  chaiJestSnapshot.setFilename = setFilename;
-  chaiJestSnapshot.setTestName = setTestName;
-  chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext = setFilenameAndTestNameUsingMochaContext;
+  configuredSetFilename = setFilename;
+  configuredSetTestName = setTestName;
+  configuredSetFilenameAndTestNameUsingMochaContext;
+
+  hasChaiJestSnapshotBeenUsed = true;
 };
 
-chaiJestSnapshot.setFilename = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `setFilename`");
+chaiJestSnapshot.setFilename = function setFilename() {
+  if (configuredSetFilename) {
+    configuredSetFilename.call(this, arguments);
+  } else {
+    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setFilename`.");
+  }
 }
 
-chaiJestSnapshot.setTestName = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `setTestName`");
+chaiJestSnapshot.setTestName = function setTestName() {
+  if (configuredSetTestName) {
+    configuredSetTestName.call(this, arguments);
+  } else {
+    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setTestName`.");
+  }
 }
 
-chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `setFilenameAndTestNameUsingMochaContext`");
+chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext = function setFilenameAndTestNameUsingMochaContext() {
+  if (configuredSetFilenameAndTestNameUsingMochaContext) {
+    configuredSetFilenameAndTestNameUsingMochaContext.call(this, arguments);
+  } else {
+    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext`.");
+  }
 }
 
 module.exports = chaiJestSnapshot;
