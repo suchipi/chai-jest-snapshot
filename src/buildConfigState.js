@@ -6,18 +6,18 @@ module.exports = function buildConfigState(determineConfig) {
     snapshotNameTemplate: undefined,
   };
 
-  function registerSnapshotFilename(snapshotFilename) {
+  function setFilename(snapshotFilename) {
     config.snapshotFilename = snapshotFilename
   }
 
-  function registerSnapshotNameTemplate(snapshotNameTemplate) {
+  function setTestName(snapshotNameTemplate) {
     config.snapshotNameTemplate = snapshotNameTemplate
   }
 
-  function registerMochaContext(mochaContext) {
+  function setFilenameAndTestNameUsingMochaContext(mochaContext) {
     const { currentTest } = mochaContext;
-    registerSnapshotFilename(currentTest.file + ".snap");
-    registerSnapshotNameTemplate(currentTest.fullTitle());
+    setFilename(currentTest.file + ".snap");
+    setTestName(currentTest.fullTitle());
   }
 
   const snapshotNameRegistry = {}; // snapshotNameRegistry[filename][name] => number
@@ -28,9 +28,9 @@ module.exports = function buildConfigState(determineConfig) {
   }
 
   return {
-    registerSnapshotFilename,
-    registerSnapshotNameTemplate,
-    registerMochaContext,
+    setFilename,
+    setTestName,
+    setFilenameAndTestNameUsingMochaContext,
     parseArgs,
   };
 }

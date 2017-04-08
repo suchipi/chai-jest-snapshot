@@ -4,11 +4,11 @@ module.exports = function determineConfig(args, config, getNameForSnapshotUsingT
   let update;
 
   if (config.snapshotFilename && !config.snapshotNameTemplate) {
-    throw new Error("You called `registerSnapshotFilename` without calling `registerSnapshotNameTemplate`. This is not supported.");
+    throw new Error("You called `setFilename` without calling `setTestName`. This is not supported.");
   }
 
   if (!config.snapshotFilename && config.snapshotNameTemplate) {
-    throw new Error("You called `registerSnapshotNameTemplate` without calling `registerSnapshotFilename`. This is not supported.");
+    throw new Error("You called `setTestName` without calling `setFilename`. This is not supported.");
   }
 
   // Possible call signatures:
@@ -25,7 +25,7 @@ module.exports = function determineConfig(args, config, getNameForSnapshotUsingT
     update = args[0] || false;
   } else {
     if (args.length < 2) {
-      throw new Error("`matchSnapshot` cannot be called without a filename and snapshot name unless `registerSnapshotFilename` and `registerSnapshotNameTemplate` have been called");
+      throw new Error("`matchSnapshot` cannot be called without a filename and snapshot name unless `setFilename` and `setTestName` have been called");
     }
     snapshotFilename = args[0];
     snapshotName = args[1];

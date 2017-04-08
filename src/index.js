@@ -4,9 +4,9 @@ import determineConfig from "./determineConfig";
 
 function chaiJestSnapshot(chai, utils) {
   const {
-    registerSnapshotFilename,
-    registerSnapshotNameTemplate,
-    registerMochaContext,
+    setFilename,
+    setTestName,
+    setFilenameAndTestNameUsingMochaContext,
     parseArgs,
   } = buildConfigState(determineConfig);
 
@@ -16,21 +16,21 @@ function chaiJestSnapshot(chai, utils) {
   // Kinda weird; mutates the exports to have the configuration functions on it
   // once you've calles this once (by passing it into chai.use). Until you have,
   // the template methods defined below are called instead.
-  chaiJestSnapshot.registerSnapshotFilename = registerSnapshotFilename;
-  chaiJestSnapshot.registerSnapshotNameTemplate = registerSnapshotNameTemplate;
-  chaiJestSnapshot.registerMochaContext = registerMochaContext;
+  chaiJestSnapshot.setFilename = setFilename;
+  chaiJestSnapshot.setTestName = setTestName;
+  chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext = setFilenameAndTestNameUsingMochaContext;
 };
 
-chaiJestSnapshot.registerSnapshotFilename = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerSnapshotFilename`");
+chaiJestSnapshot.setFilename = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `setFilename`");
 }
 
-chaiJestSnapshot.registerSnapshotNameTemplate = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerSnapshotNameTemplate`");
+chaiJestSnapshot.setTestName = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `setTestName`");
 }
 
-chaiJestSnapshot.registerMochaContext = function() {
-  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `registerMochaContext`");
+chaiJestSnapshot.setFilenameAndTestNameUsingMochaContext = function() {
+  throw new Error("Please call `chai.use(chaiJestSnapshot)` before calling `setFilenameAndTestNameUsingMochaContext`");
 }
 
 module.exports = chaiJestSnapshot;
