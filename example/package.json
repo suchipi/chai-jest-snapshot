@@ -1,0 +1,18 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run example_1 && npm run example_2 && npm run example_3",
+    "example_1": "mocha 1_manualMode/helper.js 1_manualMode/spec.js",
+    "example_2": "mocha 2_frameworkAgnosticConfigurationMode/helper.js 2_frameworkAgnosticConfigurationMode/spec.js",
+    "example_3": "mocha 3_mochaConfigurationMode/helper.js 3_mochaConfigurationMode/spec.js"
+  },
+  "author": "Stephen Scott <me@suchipi.com> (http://suchipi.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}

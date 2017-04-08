@@ -1,0 +1,29 @@
+exports[`using chaiJestSnapshot in mocha-specific configuration mode appends a number to the end of each snapshot name so that if you call matchSnapshot more than once, there isn't a conflict 1`] = `
+Object {
+  "first": "thing"
+}
+`;
+
+exports[`using chaiJestSnapshot in mocha-specific configuration mode appends a number to the end of each snapshot name so that if you call matchSnapshot more than once, there isn't a conflict 2`] = `
+Object {
+  "second": "thing"
+}
+`;
+
+exports[`using chaiJestSnapshot in mocha-specific configuration mode can use an environment variable to update the snapshot instead 1`] = `
+Object {
+  "foo": "something else"
+}
+`;
+
+exports[`using chaiJestSnapshot in mocha-specific configuration mode does not require any arguments 1`] = `
+Object {
+  "foo": "bar"
+}
+`;
+
+exports[`using chaiJestSnapshot in mocha-specific configuration mode uses an optional first argument to update a snapshot 1`] = `
+Object {
+  "foo": "not bar"
+}
+`;

@@ -1,0 +1,17 @@
+exports[`snapshot 1`] = `
+Object {
+  "foo": "bar"
+}
+`;
+
+exports[`snapshot 2`] = `
+Object {
+  "foo": "not bar"
+}
+`;
+
+exports[`snapshot 3`] = `
+Object {
+  "foo": "something else"
+}
+`;
