@@ -15,6 +15,8 @@ There are three different ways to use chai-jest-snapshot.
 ### Mocha Configuration Mode (Recommended for Mocha Users)
 If you are using mocha as your test runner, it is recommended to use chai-jest-snapshot in "mocha configuration mode".
 
+Note: do not use an arrow function for the `beforeEach` as these will not receive the correct `this` value provided by mocha.
+
 In your test setup file:
 ```js
 import chai from "chai";
