@@ -242,4 +242,20 @@ describe("matchSnapshot", function() {
 
     it("the assertion passes", expectPass);
   });
+  /**
+    it("uses from #setTestname and auto-increases and reset auto-increase when setTestname is call again", function() {
+      const testedSnapshotNameTemplate = "SnapshotNameTemplate";
+      const operation = createMatchOperation();
+      buildMatchSnapshot.setTestname(testedSnapshotNameTemplate);
+      operation.run();
+      expect(operation.internal.snapshotFile[0]._content).to.have.keys(["SnapshotNameTemplate 1"]);
+      operation.run();
+      expect(operation.internal.snapshotFile[0]._content).to.have.length(2);
+      expect(operation.internal.snapshotFile[0]._content).to.have.keys(["SnapshotNameTemplate 2"]);
+      buildMatchSnapshot.setTestname(testedSnapshotNameTemplate);
+      operation.run();
+      expect(operation.internal.snapshotFile[0]._content).to.have.keys(["SnapshotNameTemplate 1"]);
+      expect(operation.internal.snapshotFile[0]._content).to.have.length(1);
+    });
+  */
 });

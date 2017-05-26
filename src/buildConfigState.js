@@ -4,6 +4,7 @@ module.exports = function buildConfigState(determineConfig) {
   const config = {
     snapshotFilename: undefined,
     snapshotNameTemplate: undefined,
+    snapshotNameRegistry: {}, // snapshotNameRegistry[name] => number
   };
 
   function setFilename(snapshotFilename) {
@@ -12,6 +13,7 @@ module.exports = function buildConfigState(determineConfig) {
 
   function setTestName(snapshotNameTemplate) {
     config.snapshotNameTemplate = snapshotNameTemplate
+    config.snapshotNameRegistry[snapshotNameTemplate] = 0;
   }
 
   function configureUsingMochaContext(mochaContext) {
@@ -20,8 +22,7 @@ module.exports = function buildConfigState(determineConfig) {
     setTestName(currentTest.fullTitle());
   }
 
-  const snapshotNameRegistry = {}; // snapshotNameRegistry[filename][name] => number
-  const getNameForSnapshotUsingTemplate = buildGetNameForSnapshotUsingTemplate(snapshotNameRegistry);
+  const getNameForSnapshotUsingTemplate = buildGetNameForSnapshotUsingTemplate(config.snapshotNameRegistry);
 
   function parseArgs(args) {
     return determineConfig(args, config, getNameForSnapshotUsingTemplate);
