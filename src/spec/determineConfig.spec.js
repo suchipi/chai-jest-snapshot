@@ -175,6 +175,35 @@ describe("determineConfig", function() {
           update: true,
         },
       },
+      // with isNewRun
+      {
+        args: [false],
+        config: {
+          snapshotFilename: "filename",
+          snapshotNameTemplate: "name",
+          isNewRun: { 'filename': { 'name': true } }
+        },
+        envFlag: false,
+        expected: {
+          snapshotFilename: "filename",
+          snapshotName: getNameForSnapshotUsingTemplate("filename", "name", true),
+          update: false,
+        },
+      },
+      {
+        args: [false],
+        config: {
+          snapshotFilename: "filename",
+          snapshotNameTemplate: "name",
+          isNewRun: { 'filename': { 'name': false } }
+        },
+        envFlag: false,
+        expected: {
+          snapshotFilename: "filename",
+          snapshotName: getNameForSnapshotUsingTemplate("filename", "name", false),
+          update: false,
+        },
+      },
     ];
 
     examples.forEach((example) => {
