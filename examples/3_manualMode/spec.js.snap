@@ -1,17 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`snapshot 1`] = `
 Object {
-  "foo": "bar"
+  "foo": "bar",
 }
 `;
 
 exports[`snapshot 2`] = `
 Object {
-  "foo": "not bar"
+  "foo": "not bar",
 }
 `;
 
 exports[`snapshot 3`] = `
 Object {
-  "foo": "something else"
+  "foo": "something else",
 }
 `;
