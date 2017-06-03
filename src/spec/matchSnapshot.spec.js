@@ -27,8 +27,8 @@ const workspacePath = (...args) => path.join(__dirname, "matchSnapshot.spec.work
 const EXISTING_SNAPSHOT_PATH = workspacePath("ExampleComponent.js.snap");
 const EXISTING_SNAPSHOT_RELATIVE_PATH = "src/spec/matchSnapshot.spec.workspace/ExampleComponent.js.snap";
 const EXISTING_SNAPSHOT_NAME = "ExampleComponent renders properly";
-const NONEXISTANT_SNAPSHOT_PATH = workspacePath("SomeOtherComponent.js.snap");
-const NONEXISTANT_SNAPSHOT_NAME = "ExampleComponent throws rubber chickens";
+const NONEXISTENT_SNAPSHOT_PATH = workspacePath("SomeOtherComponent.js.snap");
+const NONEXISTENT_SNAPSHOT_NAME = "ExampleComponent throws rubber chickens";
 
 describe("matchSnapshot", function() {
   let object;
@@ -202,7 +202,7 @@ describe("matchSnapshot", function() {
 
     describe("and the snapshot file does not have the snapshot", function() {
       beforeEach(function() {
-        snapshotName = NONEXISTANT_SNAPSHOT_NAME;
+        snapshotName = NONEXISTENT_SNAPSHOT_NAME;
         object = tree;
       });
 
@@ -212,7 +212,7 @@ describe("matchSnapshot", function() {
         let expectedContent = `exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n` +
           prettyTree +
           `\n\`;\n\n` +
-          `exports[\`${NONEXISTANT_SNAPSHOT_NAME}\`] = \`\n` +
+          `exports[\`${NONEXISTENT_SNAPSHOT_NAME}\`] = \`\n` +
           prettyTree +
           `\n\`;\n`;
         expect(snapshotFileContent).to.equal(expectedContent);
@@ -224,8 +224,8 @@ describe("matchSnapshot", function() {
 
   describe("when the snapshot file does not exist", function() {
     beforeEach(function() {
-      snapshotFilename = NONEXISTANT_SNAPSHOT_PATH;
-      snapshotName = NONEXISTANT_SNAPSHOT_NAME;
+      snapshotFilename = NONEXISTENT_SNAPSHOT_PATH;
+      snapshotName = NONEXISTENT_SNAPSHOT_NAME;
       object = tree;
     });
 
@@ -234,7 +234,7 @@ describe("matchSnapshot", function() {
     it("a new snapshot file is created with the snapshot content", function() {
       createMatchOperation().run();
       let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
-      let expectedContent = `exports[\`${NONEXISTANT_SNAPSHOT_NAME}\`] = \`\n` +
+      let expectedContent = `exports[\`${NONEXISTENT_SNAPSHOT_NAME}\`] = \`\n` +
         prettyTree +
         `\n\`;\n`;
       expect(snapshotFileContent).to.equal(expectedContent);
