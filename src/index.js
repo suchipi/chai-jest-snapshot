@@ -6,6 +6,7 @@ let hasChaiJestSnapshotBeenUsed = false;
 let configuredSetFilename;
 let configuredSetTestName;
 let configuredConfigureUsingMochaContext;
+let configuredResetSnapshotRegistry;
 
 function chaiJestSnapshot(chai, utils) {
   if (hasChaiJestSnapshotBeenUsed) {
@@ -17,6 +18,7 @@ function chaiJestSnapshot(chai, utils) {
     setTestName,
     configureUsingMochaContext,
     parseArgs,
+    resetSnapshotRegistry,
   } = buildConfigState(determineConfig);
 
   const matchSnapshot = buildMatchSnapshot(utils, parseArgs);
@@ -25,6 +27,7 @@ function chaiJestSnapshot(chai, utils) {
   configuredSetFilename = setFilename;
   configuredSetTestName = setTestName;
   configuredConfigureUsingMochaContext = configureUsingMochaContext;
+  configuredResetSnapshotRegistry = resetSnapshotRegistry;
 
   hasChaiJestSnapshotBeenUsed = true;
 };
@@ -50,6 +53,14 @@ chaiJestSnapshot.configureUsingMochaContext = function configureUsingMochaContex
     configuredConfigureUsingMochaContext.apply(this, arguments);
   } else {
     throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.configureUsingMochaContext`.");
+  }
+}
+
+chaiJestSnapshot.resetSnapshotRegistry = function resetSnapshotRegistry() {
+  if (configuredResetSnapshotRegistry) {
+    configuredResetSnapshotRegistry.apply(this, arguments);
+  } else {
+    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.resetSnapshotRegistry`.");
   }
 }
 

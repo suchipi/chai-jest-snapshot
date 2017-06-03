@@ -30,5 +30,6 @@ describe("using chaiJestSnapshot in framework-agnostic configuration mode", func
   it("can use an environment variable to update the snapshot instead", function() {
     process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
     expect({ foo: "something else" }).to.matchSnapshot();
+    delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
   });
 });

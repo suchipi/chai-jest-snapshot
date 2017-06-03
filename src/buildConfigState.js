@@ -27,10 +27,17 @@ module.exports = function buildConfigState(determineConfig) {
     return determineConfig(args, config, getNameForSnapshotUsingTemplate);
   }
 
+  function resetSnapshotRegistry() {
+    for (let filename in snapshotNameRegistry) {
+      delete snapshotNameRegistry[filename];
+    }
+  }
+
   return {
     setFilename,
     setTestName,
     configureUsingMochaContext,
     parseArgs,
+    resetSnapshotRegistry,
   };
 }

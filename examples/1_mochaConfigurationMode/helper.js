@@ -2,6 +2,13 @@ const chai = require("chai");
 const chaiJestSnapshot = require("../../dist/");
 chai.use(chaiJestSnapshot);
 
+before(function() {
+  // In order for watch mode to work correctly, the snapshot registry needs to
+  // be reset at the beginning of each suite run. In mocha, `before` callbacks
+  // are called before the whole suite runs.
+  chaiJestSnapshot.resetSnapshotRegistry();
+});
+
 beforeEach(function() {
   // There is a shortcut for calling setFilename and setTestName in Mocha
   // that you can call once in a global beforeEach in your test helper file.
