@@ -21,7 +21,12 @@ module.exports = function determineConfig(args, config, getNameForSnapshotUsingT
 
   if (config.snapshotFilename && config.snapshotNameTemplate) {
     snapshotFilename = config.snapshotFilename;
-    snapshotName = getNameForSnapshotUsingTemplate(snapshotFilename, config.snapshotNameTemplate);
+    snapshotName = getNameForSnapshotUsingTemplate(
+      snapshotFilename,
+      config.snapshotNameTemplate,
+      config.isNewRun ? config.isNewRun[snapshotFilename][config.snapshotNameTemplate] : false,
+      (f, t, bool) => config.isNewRun[f][t] = bool
+    );
     update = args[0] || false;
   } else {
     if (args.length < 2) {

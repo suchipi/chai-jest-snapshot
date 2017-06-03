@@ -1,4 +1,5 @@
 import buildGetNameForSnapshotUsingTemplate from "../buildGetNameForSnapshotUsingTemplate";
+import { spy } from 'sinon';
 
 describe("getNameForSnapshotUsingTemplate", function() {
   let snapshotNameRegistry;
@@ -73,6 +74,20 @@ describe("getNameForSnapshotUsingTemplate", function() {
       const result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate);
       expect(result).to.equal("name 4");
       expectRegistryCounter(4);
+    });
+
+    it("doesn\'t add 1 to the value when `isNewRun` is true - returns name as if run for the first time", function() {
+      let setIsNewRun = spy();
+      let result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate, true, setIsNewRun);
+      expect(result).to.equal("name 1");
+      expectRegistryCounter(1);
+      expect(setIsNewRun.calledWith(snapshotFilename, snapshotNameTemplate, false)).to.be.ok;
+
+      setIsNewRun = spy();
+      result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate, false, setIsNewRun);
+      expect(result).to.equal("name 2");
+      expectRegistryCounter(2);
+      expect(setIsNewRun.called).not.to.be.ok;
     });
   });
 });
