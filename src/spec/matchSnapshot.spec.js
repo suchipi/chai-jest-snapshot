@@ -43,7 +43,7 @@ describe("matchSnapshot", function() {
     update,
   });
 
-  // Creates object with shape: { run, assert }
+  // Creates object with shape: { run, assert, internal }
   // `run` will call matchSnapshot with its value of `this` stubbed appropriately
   // `assert` is a sinon.spy() that was made available to matchSnapshot as `this.assert`
   // `internal` is an object that contains any variables that were published by the match operation
