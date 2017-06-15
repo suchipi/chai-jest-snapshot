@@ -1,6 +1,7 @@
 import buildMatchSnapshot from "./buildMatchSnapshot";
 import buildConfigState from "./buildConfigState";
 import determineConfig from "./determineConfig";
+import { addSerializer } from "jest-snapshot";
 
 let hasChaiJestSnapshotBeenUsed = false;
 let configuredSetFilename;
@@ -63,5 +64,7 @@ chaiJestSnapshot.resetSnapshotRegistry = function resetSnapshotRegistry() {
     throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.resetSnapshotRegistry`.");
   }
 }
+
+chaiJestSnapshot.addSerializer = addSerializer;
 
 module.exports = chaiJestSnapshot;
