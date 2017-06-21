@@ -12,7 +12,6 @@ const buildMatchSnapshot = (utils, parseArgs) => {
 
     const obj = this._obj;
     const absolutePathToSnapshot = path.resolve(snapshotFilename);
-    
     const snapshotState = new SnapshotState(undefined, {
       updateSnapshot: ci ? "none" : (update ? "all" : "new"),
       snapshotPath: absolutePathToSnapshot,
