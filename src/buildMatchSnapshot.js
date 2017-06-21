@@ -4,7 +4,7 @@ import { SnapshotState } from "jest-snapshot";
 
 const buildMatchSnapshot = (utils, parseArgs) => {
   return function matchSnapshot(...args) {
-    const { snapshotFilename, snapshotName, update } = parseArgs(args);
+    const { snapshotFilename, snapshotName, update, ci } = parseArgs(args);
 
     if (utils.flag(this, 'negate')) {
       throw new Error("`matchSnapshot` cannot be used with `.not`.");
@@ -12,9 +12,9 @@ const buildMatchSnapshot = (utils, parseArgs) => {
 
     const obj = this._obj;
     const absolutePathToSnapshot = path.resolve(snapshotFilename);
-
+    
     const snapshotState = new SnapshotState(undefined, {
-      updateSnapshot: update ? "all" : "new",
+      updateSnapshot: ci ? "none" : (update ? "all" : "new"),
       snapshotPath: absolutePathToSnapshot,
     });
 

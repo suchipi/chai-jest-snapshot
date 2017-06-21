@@ -9,66 +9,78 @@ describe("determineConfig", function() {
       {
         args: [],
         config: {},
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [],
         config: {},
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [true],
         config: {},
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [false],
         config: {},
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: Error,
       },
       // Normal cases when not using config
       {
         args: ["filename", "name"],
         config: {},
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: "name",
           update: false,
+          ci: false
         },
       },
       {
         args: ["filename", "name"],
         config: {},
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: "name",
           update: true,
+          ci: false
         },
       },
       {
         args: ["filename", "name", true],
         config: {},
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: "name",
           update: true,
+          ci: false
         },
       },
       {
         args: ["filename", "name", true],
         config: {},
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: "name",
           update: true,
+          ci: false
         },
       },
       // Invalid configuration cases
@@ -76,50 +88,58 @@ describe("determineConfig", function() {
       {
         args: [],
         config: { snapshotFilename: "filename" },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [],
         config: { snapshotFilename: "filename" },
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [true],
         config: { snapshotFilename: "filename" },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [false],
         config: { snapshotFilename: "filename" },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       // * snapshot name determined but not filename
       {
         args: [],
         config: { snapshotName: "name" },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [],
         config: { snapshotName: "name" },
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [true],
         config: { snapshotName: "name" },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       {
         args: [false],
         config: { snapshotName: "name" },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: Error,
       },
       // valid cases using configuration
@@ -129,11 +149,13 @@ describe("determineConfig", function() {
           snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: false,
+          ci: false
         },
       },
       {
@@ -142,11 +164,13 @@ describe("determineConfig", function() {
           snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: true,
+          ci: false
         },
       },
       {
@@ -155,11 +179,13 @@ describe("determineConfig", function() {
           snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
-        envFlag: false,
+        envUpdateFlag: false,
+        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: true,
+          ci: false
         },
       },
       {
@@ -168,11 +194,13 @@ describe("determineConfig", function() {
           snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
-        envFlag: true,
+        envUpdateFlag: true,
+        envCiFlag: true,
         expected: {
           snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
           update: true,
+          ci: true
         },
       },
     ];
@@ -181,13 +209,17 @@ describe("determineConfig", function() {
       describe(
         `when args is ${JSON.stringify(example.args)} ` +
         `and config is ${JSON.stringify(example.config)} ` +
-        `and CHAI_JEST_SNAPSHOT_UPDATE_ALL is ${example.envFlag ? "set" : "not set"}`
+        `and CHAI_JEST_SNAPSHOT_UPDATE_ALL is ${example.envUpdateFlag ? "set" : "not set"} `+
+        `and CHAI_JEST_CI is ${example.envCiFlag ? "set" : "not set"}`
       , function() {
 
         const run = () => {
           delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
-          if (example.envFlag) {
+          if (example.envUpdateFlag) {
             process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
+          }
+          if (example.envCiFlag) {
+            process.env.CHAI_JEST_CI = "true";
           }
           return determineConfig(example.args, example.config, getNameForSnapshotUsingTemplate);
         };
@@ -203,6 +235,7 @@ describe("determineConfig", function() {
             expect(actual.snapshotFilename).to.equal(expected.snapshotFilename);
             expect(actual.snapshotName).to.equal(expected.snapshotName);
             expect(actual.update).to.equal(expected.update);
+            expect(actual.ci).to.equal(expected.ci);
           });
         }
       });
