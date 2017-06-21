@@ -37,7 +37,7 @@ module.exports = function determineConfig(args, config, getNameForSnapshotUsingT
     update = true;
   }
 
-  if (typeof process !== "undefined" && process.env && process.env.CHAI_JEST_CI) {
+  if (typeof process !== "undefined" && process.env && process.env.CI) {
     ci = true;
   }
 

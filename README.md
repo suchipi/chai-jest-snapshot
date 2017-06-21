@@ -68,13 +68,13 @@ $ env CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
 ```
 This behaves similarly to running `jest -u`.
 
-If you want to avoid updating snapshots and fail instead, set the environment variable `CHAI_JEST_CI` to "true":
+If you want to avoid updating snapshots and fail instead, set the environment variable `CI` to "true":
 ```shell
 # assuming `npm test` runs your tests:
 # sh/bash/zsh
-$ CHAI_JEST_CI=true npm test
+$ CI=true npm test
 # fish
-$ env CHAI_JEST_CI=true npm test
+$ env CI=true npm test
 ```
 This behaves similarly to running `jest --cli`.
 

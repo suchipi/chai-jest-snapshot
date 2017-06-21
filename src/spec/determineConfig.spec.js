@@ -174,6 +174,21 @@ describe("determineConfig", function() {
         },
       },
       {
+        args: [],
+        config: {
+          snapshotFilename: "filename",
+          snapshotNameTemplate: "name",
+        },
+        envUpdateFlag: false,
+        envCiFlag: true,
+        expected: {
+          snapshotFilename: "filename",
+          snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
+          update: false,
+          ci: true
+        },
+      },
+      {
         args: [true],
         config: {
           snapshotFilename: "filename",
@@ -210,16 +225,17 @@ describe("determineConfig", function() {
         `when args is ${JSON.stringify(example.args)} ` +
         `and config is ${JSON.stringify(example.config)} ` +
         `and CHAI_JEST_SNAPSHOT_UPDATE_ALL is ${example.envUpdateFlag ? "set" : "not set"} `+
-        `and CHAI_JEST_CI is ${example.envCiFlag ? "set" : "not set"}`
+        `and CI is ${example.envCliFlag ? "set" : "not set"}`
       , function() {
 
         const run = () => {
           delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
+          delete process.env.CI;
           if (example.envUpdateFlag) {
             process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
           }
           if (example.envCiFlag) {
-            process.env.CHAI_JEST_CI = "true";
+            process.env.CI = "true";
           }
           return determineConfig(example.args, example.config, getNameForSnapshotUsingTemplate);
         };
