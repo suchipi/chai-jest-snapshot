@@ -2,6 +2,7 @@ module.exports = function determineConfig(args, config, getNameForSnapshotUsingT
   let snapshotFilename;
   let snapshotName;
   let update;
+  let ci = false;
 
   if (config.snapshotFilename && !config.snapshotNameTemplate) {
     throw new Error("Using `setFilename` without also using `setTestName` is not supported.");
@@ -36,9 +37,14 @@ module.exports = function determineConfig(args, config, getNameForSnapshotUsingT
     update = true;
   }
 
+  if (typeof process !== "undefined" && process.env && process.env.CI) {
+    ci = true;
+  }
+
   return {
     snapshotFilename,
     snapshotName,
     update,
+    ci
   };
 }
