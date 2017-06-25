@@ -18,8 +18,8 @@ const buildMatchSnapshot = (utils, parseArgs) => {
     });
 
     const match = snapshotState.match(snapshotName, obj, snapshotName);
-    actual = match.actual || "";
-    expected = match.expected || "";
+    const actual = match.actual || "";
+    const expected = match.expected || "";
     snapshotState.save();
 
     this.assert(
