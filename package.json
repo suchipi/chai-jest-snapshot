@@ -1,6 +1,6 @@
 {
   "name": "chai-jest-snapshot",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Chai assertion that provides Jest's snapshot testing",
   "main": "dist/index.js",
   "repository": "https://github.com/suchipi/chai-jest-snapshot",
