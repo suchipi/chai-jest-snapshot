@@ -68,7 +68,7 @@ $ env CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
 ```
 This behaves similarly to running `jest -u`.
 
-If you want to avoid updating snapshots and fail instead, set the environment variable `CI` to "true":
+If you want tests to fail when a snapshot is missing (instead of writing a new one), set the environment variable `CI` to "true":
 ```shell
 # assuming `npm test` runs your tests:
 # sh/bash/zsh
@@ -76,9 +76,7 @@ $ CI=true npm test
 # fish
 $ env CI=true npm test
 ```
-This behaves similarly to running `jest --cli`.
-
-
+This behaves similarly to running `jest --ci`.
 
 ### Framework-agnostic Configuration Mode (Recommended for Non-Mocha Users)
 If you are not using mocha as your test runner, it is recommended to use chai-jest-snapshot in "framework-agnostic configuration mode".
@@ -144,6 +142,16 @@ $ env CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
 ```
 This behaves similarly to running `jest -u`.
 
+If you want tests to fail when a snapshot is missing (instead of writing a new one), set the environment variable `CI` to "true":
+```shell
+# assuming `npm test` runs your tests:
+# sh/bash/zsh
+$ CI=true npm test
+# fish
+$ env CI=true npm test
+```
+This behaves similarly to running `jest --ci`.
+
 ### Manual Mode
 If Mocha Configuration Mode or Framework-agnostic Configuration Mode do not satisfy your needs, you can use "manual mode".
 
@@ -192,6 +200,16 @@ $ CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
 $ env CHAI_JEST_SNAPSHOT_UPDATE_ALL=true npm test
 ```
 This behaves similarly to running `jest -u`.
+
+If you want tests to fail when a snapshot is missing (instead of writing a new one), set the environment variable `CI` to "true":
+```shell
+# assuming `npm test` runs your tests:
+# sh/bash/zsh
+$ CI=true npm test
+# fish
+$ env CI=true npm test
+```
+This behaves similarly to running `jest --ci`.
 
 ## Tips
 * If you are referencing `__filename` or `__dirname` in your snapshot file names, and compile your tests using babel, you will probably want to use [babel-plugin-transform-dirname-filename](https://github.com/TooTallNate/babel-plugin-transform-dirname-filename) to ensure your snapshots end up in your source directory instead of the directory where your tests were built (ie `dist` or `build`).
