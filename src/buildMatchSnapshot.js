@@ -17,15 +17,13 @@ const buildMatchSnapshot = (utils, parseArgs) => {
       snapshotPath: absolutePathToSnapshot,
     });
 
-    const {
-      actual,
-      expected,
-      pass,
-    } = snapshotState.match(snapshotName, obj, snapshotName);
+    const match = snapshotState.match(snapshotName, obj, snapshotName);
+    actual = match.actual || "";
+    expected = match.expected || "";
     snapshotState.save();
 
     this.assert(
-      pass,
+      match.pass,
       `expected value to match snapshot ${snapshotName}`,
       `expected value to not match snapshot ${snapshotName}`,
       expected.trim(),
