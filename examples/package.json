@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run example_1 && npm run example_2 && npm run example_3",
+    "test": "npm run example_1 && npm run example_2 && npm run example_3 && npm run example_4",
     "example_1": "mocha 1_mochaConfigurationMode/helper.js 1_mochaConfigurationMode/spec.js",
     "example_1:watch": "mocha --watch 1_mochaConfigurationMode/helper.js 1_mochaConfigurationMode/spec.js",
     "example_2": "mocha 2_frameworkAgnosticConfigurationMode/helper.js 2_frameworkAgnosticConfigurationMode/spec.js",
     "example_2:watch": "mocha --watch 2_frameworkAgnosticConfigurationMode/helper.js 2_frameworkAgnosticConfigurationMode/spec.js",
     "example_3": "mocha 3_manualMode/helper.js 3_manualMode/spec.js",
-    "example_3:watch": "mocha --watch 3_manualMode/helper.js 3_manualMode/spec.js"
+    "example_3:watch": "mocha --watch 3_manualMode/helper.js 3_manualMode/spec.js",
+    "example_4": "jest --roots 4_jestMode",
+    "example_4:watch": "jest --watch --roots 4_jestMode"
   },
   "author": "Stephen Scott <me@suchipi.com> (http://suchipi.com)",
   "license": "ISC",

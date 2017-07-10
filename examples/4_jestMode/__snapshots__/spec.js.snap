@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`using chaiJestSnapshot in Jest mode (i.e. within Jest) delegates to Jest’s built-in snapshot ability 1`] = `
+Object {
+  "foo": "bar",
+}
+`;

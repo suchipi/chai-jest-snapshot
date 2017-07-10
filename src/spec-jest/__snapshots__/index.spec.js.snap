@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matchSnapshot when running inside Jest should delegate to Jest’s built-in matcher 1`] = `
+<div>
+  <h1>
+    Hi!
+  </h1>
+</div>
+`;
