@@ -10,7 +10,7 @@ $ npm install --save-dev chai-jest-snapshot
 ```
 
 ## Usage
-There are three different ways to use chai-jest-snapshot.
+There are four different ways to use chai-jest-snapshot.
 
 ### Mocha Configuration Mode (Recommended for Mocha Users)
 If you are using mocha as your test runner, it is recommended to use chai-jest-snapshot in "mocha configuration mode".
@@ -77,6 +77,17 @@ $ CI=true npm test
 $ env CI=true npm test
 ```
 This behaves similarly to running `jest --ci`.
+
+### Jest Configuration Mode (Recommended for Jest Users)
+
+If you are using Jest, but prefer Chai assertions, you don’t have anything to configure except loading the plugin itself: the `matchSnapshot` Chai assertion will automatically delegate to Jest’s built-in snapshot capability, so all usual options, settings, CLI flags, method arguments, etc. will work out of the box.
+
+```js
+import chai from "chai";
+import chaiJestSnapshot from "chai-jest-snapshot";
+
+chai.use(chaiJestSnapshot);
+```
 
 ### Framework-agnostic Configuration Mode (Recommended for Non-Mocha Users)
 If you are not using mocha as your test runner, it is recommended to use chai-jest-snapshot in "framework-agnostic configuration mode".
