@@ -12,14 +12,6 @@ const ExampleComponent = () => (
   </div>
 );
 const tree = renderer.create(<ExampleComponent />).toJSON();
-const OtherComponent = () => (
-  <div>
-    <h1>
-      Hello!
-    </h1>
-  </div>
-);
-const otherTree = renderer.create(<OtherComponent />).toJSON();
 
 describe("matchSnapshot", () => {
 
