@@ -6,11 +6,12 @@
   "repository": "https://github.com/suchipi/chai-jest-snapshot",
   "scripts": {
     "build": "rm -rf dist/* && babel src --out-dir dist",
-    "mocha": "mocha -r 'dist/spec/index' 'dist/**/*.spec.js'",
+    "mocha": "mocha -r 'dist/spec/index' 'dist/spec/*.spec.js'",
     "examples": "cd examples && npm test",
     "example_1:watch": "npm run build && cd examples && npm run example_1:watch",
     "example_2:watch": "npm run build && cd examples && npm run example_2:watch",
     "example_3:watch": "npm run build && cd examples && npm run example_3:watch",
+    "example_4:watch": "npm run build && cd examples && npm run example_4:watch",
     "test": "npm run build && npm run mocha && npm run examples"
   },
   "keywords": [
