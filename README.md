@@ -89,8 +89,9 @@ import chaiJestSnapshot from "chai-jest-snapshot";
 chai.use(chaiJestSnapshot);
 ```
 
-### Framework-agnostic Configuration Mode (Recommended for Non-Mocha Users)
-If you are not using mocha as your test runner, it is recommended to use chai-jest-snapshot in "framework-agnostic configuration mode".
+### Framework-agnostic Configuration Mode (Recommended for Non-Mocha/Jest Users)
+
+If you are using neither mocha nor Jest as your test runner, it is recommended to use chai-jest-snapshot in "framework-agnostic configuration mode".
 
 In your test setup file:
 ```js

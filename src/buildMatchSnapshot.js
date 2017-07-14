@@ -43,11 +43,10 @@ const buildMatchSnapshot = (utils, parseArgs) => {
 };
 
 const safeRequireJestExpect = () => {
-  try {
-    return require("jest-matchers");
-  } catch (e) {
-    return null;
-  }
+  // Jest might rename its "jest-matchers" module to "expect", so let's
+  // avoid an actual require and bank on the global expect here.
+  // (see https://github.com/facebook/jest/issues/1679#issuecomment-282478002)
+  return (typeof expect === 'undefined') ? null : expect;
 };
 
 const JEST_MARKERS = ["enableAutomock", "genMockFromModule", "clearAllMocks", "runAllTicks"];
