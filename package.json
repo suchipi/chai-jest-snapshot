@@ -1,6 +1,6 @@
 {
   "name": "chai-jest-snapshot",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Chai assertion that provides Jest's snapshot testing",
   "main": "dist/index.js",
   "repository": "https://github.com/suchipi/chai-jest-snapshot",
@@ -42,7 +42,7 @@
     "sinon-chai": "2.8.0"
   },
   "dependencies": {
-    "jest-snapshot": "20.0.3",
+    "jest-snapshot": "21.2.1",
     "lodash.values": "^4.3.0"
   },
   "peerDependencies": {
