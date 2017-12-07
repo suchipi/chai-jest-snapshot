@@ -223,6 +223,19 @@ $ env CI=true npm test
 ```
 This behaves similarly to running `jest --ci`.
 
+## Misc. API
+
+### `addSerializer(serializer: SerializerFunction)`
+
+```javascript
+import chaiJestSnapshot from "chai-jest-snapshot";
+import enzymeToJson from "enzyme-to-json";
+
+chaiJestSnapshot.addSerializer(enzymeToJson({ deep: true }));
+```
+
+Exposes Jest's `addSerializer` method. Used to add custom serialization, one example is [enzyme-to-json](https://www.npmjs.com/package/enzyme-to-json).
+
 ## Tips
 * If you are referencing `__filename` or `__dirname` in your snapshot file names, and compile your tests using babel, you will probably want to use [babel-plugin-transform-dirname-filename](https://github.com/TooTallNate/babel-plugin-transform-dirname-filename) to ensure your snapshots end up in your source directory instead of the directory where your tests were built (ie `dist` or `build`).
 
