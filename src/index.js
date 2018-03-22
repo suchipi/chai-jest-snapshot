@@ -1,6 +1,7 @@
 import buildMatchSnapshot from "./buildMatchSnapshot";
 import buildConfigState from "./buildConfigState";
 import determineConfig from "./determineConfig";
+import snapshotStateHandler from "./snapshotStateHandler";
 import { addSerializer } from "jest-snapshot";
 
 let hasChaiJestSnapshotBeenUsed = false;
@@ -64,6 +65,9 @@ chaiJestSnapshot.resetSnapshotRegistry = function resetSnapshotRegistry() {
     throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.resetSnapshotRegistry`.");
   }
 }
+
+chaiJestSnapshot.createState = snapshotStateHandler.create;
+chaiJestSnapshot.removeUncheckedKeys = snapshotStateHandler.removeUncheckedKeys;
 
 chaiJestSnapshot.addSerializer = addSerializer;
 

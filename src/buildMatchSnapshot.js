@@ -1,6 +1,6 @@
 import path from "path";
 import values from "lodash.values";
-import { SnapshotState } from "jest-snapshot";
+import snapshotStateHandler from "./snapshotStateHandler";
 
 const buildMatchSnapshot = (utils, parseArgs) => {
   if (thisRunsInJest()) {
@@ -13,22 +13,17 @@ const buildMatchSnapshot = (utils, parseArgs) => {
   }
 
   return function matchSnapshot(...args) {
-    const { snapshotFilename, snapshotName, update, ci } = parseArgs(args);
-
     if (utils.flag(this, 'negate')) {
       throw new Error("`matchSnapshot` cannot be used with `.not`.");
     }
+    const { snapshotFilename, snapshotName } = parseArgs(args);
 
-    const obj = this._obj;
-    const absolutePathToSnapshot = path.resolve(snapshotFilename);
-    const snapshotState = new SnapshotState(undefined, {
-      updateSnapshot: ci ? "none" : (update ? "all" : "new"),
-      snapshotPath: absolutePathToSnapshot,
-    });
+    const snapshotState = snapshotStateHandler.get(path.resolve(snapshotFilename));
 
-    const match = snapshotState.match(snapshotName, obj, snapshotName);
+    const match = snapshotState.match(snapshotName, this._obj, snapshotName);
     const actual = match.actual || "";
     const expected = match.expected || "";
+
     snapshotState.save();
 
     this.assert(
