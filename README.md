@@ -31,6 +31,10 @@ before(function() {
 beforeEach(function() {
   chaiJestSnapshot.configureUsingMochaContext(this);
 });
+
+after(function() {
+  chaiJestSnapshot.removeUncheckedKeys();
+});
 ```
 
 In your spec file(s) (as an example):
@@ -103,6 +107,10 @@ before(function() {
   // `beforeAll` instead of `before`.
   chaiJestSnapshot.resetSnapshotRegistry();
 });
+
+after(function() {
+  chaiJestSnapshot.removeUncheckedKeys();
+});
 ```
 
 In your spec file(s) (as an example):
@@ -114,7 +122,10 @@ import Link from "./Link";
 
 describe("Link", function() {
   beforeEach(function() {
-    chaiJestSnapshot.setFilename(__filename + ".snap");
+    const snapshotFilename = __filename + ".snap";
+
+    chaiJestSnapshot.setFilename(snapshotFilename);
+    chaiJestSnapshot.createState(snapshotFilename);
   });
 
   it("renders correctly", () => {
@@ -181,6 +192,9 @@ describe("Link", function() {
 
     let snapshotFilename = __filename + ".snap";
     let snapshotName = "Link renders correctly";
+
+    chaiJestSnapshot.createState(snapshotFilename);
+
     expect(tree).to.matchSnapshot(snapshotFilename, snapshotName);
   });
 });
