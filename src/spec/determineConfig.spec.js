@@ -5,243 +5,52 @@ describe("determineConfig", function() {
 
   describe("has the expected behavior for all examples", function() {
     const examples = [
-      // Invalid cases; not enough info defined
+      // Invalid cases:
+      // not enough info defined
       {
         args: [],
         config: {},
-        envUpdateFlag: false,
-        envCiFlag: false,
         expected: Error,
       },
+      // filename determined but snapshot name is not
       {
         args: [],
-        config: {},
-        envUpdateFlag: true,
-        envCiFlag: false,
+        config: { snapshotFilename: "filename" },
         expected: Error,
       },
+      // snapshot name determined but filename is not
       {
-        args: [true],
-        config: {},
-        envUpdateFlag: false,
-        envCiFlag: false,
+        args: [],
+        config: { snapshotName: "name" },
         expected: Error,
       },
-      {
-        args: [false],
-        config: {},
-        envUpdateFlag: true,
-        envCiFlag: false,
-        expected: Error,
-      },
-      // Normal cases when not using config
+      // Normal cases:
+      // when using arguments
       {
         args: ["filename", "name"],
         config: {},
-        envUpdateFlag: false,
-        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: "name",
-          update: false,
-          ci: false
         },
       },
-      {
-        args: ["filename", "name"],
-        config: {},
-        envUpdateFlag: true,
-        envCiFlag: false,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: "name",
-          update: true,
-          ci: false
-        },
-      },
-      {
-        args: ["filename", "name", true],
-        config: {},
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: "name",
-          update: true,
-          ci: false
-        },
-      },
-      {
-        args: ["filename", "name", true],
-        config: {},
-        envUpdateFlag: true,
-        envCiFlag: false,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: "name",
-          update: true,
-          ci: false
-        },
-      },
-      // Invalid configuration cases
-      // * filename determined but not snapshot name
-      {
-        args: [],
-        config: { snapshotFilename: "filename" },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: Error,
-      },
-      {
-        args: [],
-        config: { snapshotFilename: "filename" },
-        envUpdateFlag: true,
-        envCiFlag: false,
-        expected: Error,
-      },
-      {
-        args: [true],
-        config: { snapshotFilename: "filename" },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: Error,
-      },
-      {
-        args: [false],
-        config: { snapshotFilename: "filename" },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: Error,
-      },
-      // * snapshot name determined but not filename
-      {
-        args: [],
-        config: { snapshotName: "name" },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: Error,
-      },
-      {
-        args: [],
-        config: { snapshotName: "name" },
-        envUpdateFlag: true,
-        envCiFlag: false,
-        expected: Error,
-      },
-      {
-        args: [true],
-        config: { snapshotName: "name" },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: Error,
-      },
-      {
-        args: [false],
-        config: { snapshotName: "name" },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: Error,
-      },
-      // valid cases using configuration
+      // when using configuration
       {
         args: [],
         config: {
           snapshotFilename: "filename",
           snapshotNameTemplate: "name",
         },
-        envUpdateFlag: false,
-        envCiFlag: false,
         expected: {
           snapshotFilename: "filename",
           snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
-          update: false,
-          ci: false
-        },
-      },
-      {
-        args: [],
-        config: {
-          snapshotFilename: "filename",
-          snapshotNameTemplate: "name",
-        },
-        envUpdateFlag: true,
-        envCiFlag: false,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
-          update: true,
-          ci: false
-        },
-      },
-      {
-        args: [],
-        config: {
-          snapshotFilename: "filename",
-          snapshotNameTemplate: "name",
-        },
-        envUpdateFlag: false,
-        envCiFlag: true,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
-          update: false,
-          ci: true
-        },
-      },
-      {
-        args: [true],
-        config: {
-          snapshotFilename: "filename",
-          snapshotNameTemplate: "name",
-        },
-        envUpdateFlag: false,
-        envCiFlag: false,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
-          update: true,
-          ci: false
-        },
-      },
-      {
-        args: [false],
-        config: {
-          snapshotFilename: "filename",
-          snapshotNameTemplate: "name",
-        },
-        envUpdateFlag: true,
-        envCiFlag: true,
-        expected: {
-          snapshotFilename: "filename",
-          snapshotName: getNameForSnapshotUsingTemplate("filename", "name"),
-          update: true,
-          ci: true
         },
       },
     ];
 
-    afterEach(function() {
-        delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
-        delete process.env.CI;
-    });
-
     examples.forEach((example) => {
-      describe(
-        `when args is ${JSON.stringify(example.args)} ` +
-        `and config is ${JSON.stringify(example.config)} ` +
-        `and CHAI_JEST_SNAPSHOT_UPDATE_ALL is ${example.envUpdateFlag ? "set" : "not set"} `+
-        `and CI is ${example.envCliFlag ? "set" : "not set"}`
-      , function() {
-
-        const run = () => {
-          if (example.envUpdateFlag) {
-            process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
-          }
-          if (example.envCiFlag) {
-            process.env.CI = "true";
-          }
-          return determineConfig(example.args, example.config, getNameForSnapshotUsingTemplate);
-        };
+      describe(`when args is ${JSON.stringify(example.args)} and config is ${JSON.stringify(example.config)}`, function() {
+        const run = () => determineConfig(example.args, example.config, getNameForSnapshotUsingTemplate);
 
         if (example.expected === Error) {
           it("throws an Error", function() {
@@ -251,10 +60,9 @@ describe("determineConfig", function() {
           it("returns the expected values", function() {
             const actual = run();
             const { expected } = example;
+
             expect(actual.snapshotFilename).to.equal(expected.snapshotFilename);
             expect(actual.snapshotName).to.equal(expected.snapshotName);
-            expect(actual.update).to.equal(expected.update);
-            expect(actual.ci).to.equal(expected.ci);
           });
         }
       });
