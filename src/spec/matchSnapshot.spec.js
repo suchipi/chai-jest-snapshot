@@ -5,8 +5,8 @@ import React from "react";
 import renderer from "react/lib/ReactTestRenderer";
 import { expect } from "chai";
 import sinon from "sinon";
-import { SnapshotState } from "jest-snapshot";
 import buildMatchSnapshot from "../buildMatchSnapshot";
+import snapshotStateHandler from "../snapshotStateHandler";
 
 const ExampleComponent = () => (
   <div>
@@ -36,13 +36,11 @@ describe("matchSnapshot", function() {
   let object;
   let snapshotFilename;
   let snapshotName;
-  let update;
   let utils;
 
   const parseArgs = () => ({
     snapshotFilename,
     snapshotName,
-    update,
   });
 
   // Creates object with shape: { run, assert }
@@ -86,25 +84,32 @@ describe("matchSnapshot", function() {
   };
 
   beforeEach(function() {
-    // clear out workspace
-    rimraf.sync(workspacePath("*"));
     // create the snapshot file that is considered "existing" by these tests
-    const existingSnapshotState = new SnapshotState(undefined, {
-      snapshotPath: EXISTING_SNAPSHOT_PATH,
-      updateSnapshot: "all",
-    });
+    snapshotStateHandler.create(EXISTING_SNAPSHOT_PATH);
+    const existingSnapshotState = snapshotStateHandler.get(EXISTING_SNAPSHOT_PATH);
+
     existingSnapshotState.match(EXISTING_SNAPSHOT_NAME, tree, EXISTING_SNAPSHOT_NAME);
     existingSnapshotState.save();
 
     object = undefined;
     snapshotFilename = undefined;
     snapshotName = undefined;
-    update = false;
     utils = { flag: () => undefined };
   });
 
   afterEach(function() {
+    // clear out workspace
     rimraf.sync(workspacePath("*"));
+  });
+
+  describe("and the assertion is made with `.not` in the chain", function() {
+    beforeEach(function() {
+      utils = { flag: (_, name) => name === 'negate' ? true : undefined };
+    });
+
+    it("throws an error", function() {
+      expect(createMatchOperation().run).to.throw(Error, "`matchSnapshot` cannot be used with `.not`.");
+    });
   });
 
   describe("when the snapshot file exists", function() {
@@ -123,16 +128,6 @@ describe("matchSnapshot", function() {
         });
 
         it("the assertion passes", expectPass);
-
-        describe("and the assertion is made with `.not` in the chain", function() {
-          beforeEach(function() {
-            utils = { flag: (_, name) => name === 'negate' ? true : undefined };
-          });
-
-          it("throws an error", function() {
-            expect(createMatchOperation().run).to.throw(Error, "`matchSnapshot` cannot be used with `.not`.");
-          });
-        });
       });
 
       describe("and the content does not match", function() {
@@ -150,27 +145,6 @@ describe("matchSnapshot", function() {
         it("does not overwrite the snapshot with the new content", doesNotOverwriteSnapshot);
 
         it("the assertion does not pass", expectFailure('"something other than tree"'));
-
-        describe("and the 'update' flag set to true", function() {
-          beforeEach(function() {
-            update = true;
-          });
-
-          it("overwrites the snapshot with the new content", function() {
-            createMatchOperation().run();
-            let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
-            let expectedContent = `${jestSnapshotHeader}exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
-            expect(snapshotFileContent).to.equal(expectedContent);
-          });
-
-          it("the assertion passes", expectPass)
-        });
-
-        describe("and the 'update' flag not set to true", function() {
-          beforeEach(function() {
-            update = undefined;
-          });
-        });
 
         describe("and a relative path is used (#1)", function() {
           beforeEach(function() {
@@ -208,6 +182,12 @@ describe("matchSnapshot", function() {
 
   describe("when the snapshot file does not exist", function() {
     beforeEach(function() {
+      snapshotStateHandler.create(NONEXISTENT_SNAPSHOT_PATH);
+      const nonExistingSnapshotState = snapshotStateHandler.get(NONEXISTENT_SNAPSHOT_PATH);
+
+      nonExistingSnapshotState.match(NONEXISTENT_SNAPSHOT_NAME, tree, NONEXISTENT_SNAPSHOT_NAME);
+      nonExistingSnapshotState.save();
+
       snapshotFilename = NONEXISTENT_SNAPSHOT_PATH;
       snapshotName = NONEXISTENT_SNAPSHOT_NAME;
       object = tree;
