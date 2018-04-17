@@ -220,6 +220,11 @@ describe("determineConfig", function() {
       },
     ];
 
+    afterEach(function() {
+        delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
+        delete process.env.CI;
+    });
+
     examples.forEach((example) => {
       describe(
         `when args is ${JSON.stringify(example.args)} ` +
@@ -229,8 +234,6 @@ describe("determineConfig", function() {
       , function() {
 
         const run = () => {
-          delete process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL;
-          delete process.env.CI;
           if (example.envUpdateFlag) {
             process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL = "true";
           }
