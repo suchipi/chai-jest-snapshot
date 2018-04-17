@@ -3,10 +3,10 @@ import { SnapshotState } from "jest-snapshot";
 let states = {};
 
 module.exports = {
-    create: ({snapshotPath, ci, update}) => {
+    create: (snapshotPath) => {
         if (!states[snapshotPath]) {
             states[snapshotPath] = new SnapshotState(undefined, {
-                updateSnapshot: ci ? "none" : (update ? "all" : "new"),
+                updateSnapshot: process.env.CI ? "none" : (process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL ? "all" : "new"),
                 snapshotPath,
             });
         }
