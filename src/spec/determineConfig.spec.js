@@ -48,18 +48,17 @@ describe("determineConfig", function() {
       },
     ];
 
-    examples.forEach((example) => {
-      describe(`when args is ${JSON.stringify(example.args)} and config is ${JSON.stringify(example.config)}`, function() {
-        const run = () => determineConfig(example.args, example.config, getNameForSnapshotUsingTemplate);
+    examples.forEach(({args, config, expected}) => {
+      describe(`when args is ${JSON.stringify(args)} and config is ${JSON.stringify(config)}`, function() {
+        const run = () => determineConfig(args, config, getNameForSnapshotUsingTemplate);
 
-        if (example.expected === Error) {
+        if (expected === Error) {
           it("throws an Error", function() {
             expect(run).to.throw(Error);
           });
         } else {
           it("returns the expected values", function() {
             const actual = run();
-            const { expected } = example;
 
             expect(actual.snapshotFilename).to.equal(expected.snapshotFilename);
             expect(actual.snapshotName).to.equal(expected.snapshotName);
