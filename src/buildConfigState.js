@@ -1,3 +1,5 @@
+import path from "path";
+import snapshotStateHandler from "./snapshotStateHandler";
 import buildGetNameForSnapshotUsingTemplate from "./buildGetNameForSnapshotUsingTemplate";
 
 module.exports = function buildConfigState(determineConfig) {
@@ -14,10 +16,13 @@ module.exports = function buildConfigState(determineConfig) {
     config.snapshotNameTemplate = snapshotNameTemplate
   }
 
-  function configureUsingMochaContext(mochaContext) {
-    const { currentTest } = mochaContext;
-    setFilename(currentTest.file + ".snap");
+  function configureUsingMochaContext({ currentTest }) {
+    const snapshotFilename = currentTest.file + ".snap";
+
+    setFilename(snapshotFilename);
     setTestName(currentTest.fullTitle());
+
+    snapshotStateHandler.create(path.resolve(snapshotFilename));
   }
 
   const snapshotNameRegistry = {}; // snapshotNameRegistry[filename][name] => number
