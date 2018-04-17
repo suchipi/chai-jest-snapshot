@@ -53,12 +53,7 @@ describe("Link", function() {
 This will automatically write snapshots to a file with the same name as your test file, with `.snap` added to the end.
 This will also choose snapshot names based on the test name, adding a number to the end based on the number of times `matchSnapshot` was called in each test (similar to jest).
 
-In this mode, to update a single snapshot, you can pass `true` as an argument to `matchSnapshot`:
-```js
-expect(tree).to.matchSnapshot(true);
-```
-
-If you want to update all snapshots without adding `true` to each one, set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
+If you want to update all snapshots set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
 ```shell
 # assuming `npm test` runs your tests:
 # sh/bash/zsh
@@ -139,12 +134,8 @@ describe("Link", function() {
 This will write snapshots to the file name you specify, (in this example, a file with the same name and location as the spec file, but with `.snap` added to the end).
 This will use whatever snapshot name you specify as a template, adding a number to the end based on the number of times `matchSnapshot` was called using the same file name and snapshot name (similar to what jest does).
 
-In this mode, to update a single snapshot, you can pass `true` as an argument to `matchSnapshot`:
-```js
-expect(tree).to.matchSnapshot(true);
-```
 
-If you want to update all snapshots without adding `true` to each one, set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
+If you want to update all snapshots set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
 ```shell
 # assuming `npm test` runs your tests:
 # sh/bash/zsh
@@ -198,12 +189,7 @@ describe("Link", function() {
 This will write snapshots to the file name you specify, (in this example, a file with the same name and location as the spec file, but with `.snap` added to the end).
 This will use whatever snapshot name you specify as the snapshot name. **NOTE**: unlike other modes, this mode does *not* add a number to the end of the snapshot name.
 
-In this mode, to update a single snapshot, you can pass `true` as an extra, third argument to `matchSnapshot`:
-```js
-expect(tree).to.matchSnapshot(snapshotFilename, snapshotName, true);
-```
-
-If you want to update all snapshots without adding `true` to each one, set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
+If you want to update all snapshots set the environment variable `CHAI_JEST_SNAPSHOT_UPDATE_ALL` to "true":
 ```shell
 # assuming `npm test` runs your tests:
 # sh/bash/zsh
