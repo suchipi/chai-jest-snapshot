@@ -6,7 +6,7 @@ module.exports = {
     create: (snapshotPath) => {
         if (!states[snapshotPath]) {
             states[snapshotPath] = new SnapshotState(undefined, {
-                updateSnapshot: process.env.CI ? "none" : (process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL ? "all" : "new"),
+                updateSnapshot: process.env.CI === "true" ? "none" : (process.env.CHAI_JEST_SNAPSHOT_UPDATE_ALL === "true" ? "all" : "new"),
                 snapshotPath,
             });
         }
