@@ -100,6 +100,7 @@ describe("matchSnapshot", function() {
   afterEach(function() {
     // clear out workspace
     rimraf.sync(workspacePath("*"));
+    snapshotStateHandler.removeUncheckedKeys();
   });
 
   describe("and the assertion is made with `.not` in the chain", function() {
