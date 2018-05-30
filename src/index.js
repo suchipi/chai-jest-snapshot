@@ -11,7 +11,9 @@ let configuredResetSnapshotRegistry;
 
 function chaiJestSnapshot(chai, utils) {
   if (hasChaiJestSnapshotBeenUsed) {
-    throw new Error("Running `chai.use(chaiJestSnapshot)` more than once is not supported.");
+    throw new Error(
+      "Running `chai.use(chaiJestSnapshot)` more than once is not supported.",
+    );
   }
 
   const {
@@ -31,39 +33,47 @@ function chaiJestSnapshot(chai, utils) {
   configuredResetSnapshotRegistry = resetSnapshotRegistry;
 
   hasChaiJestSnapshotBeenUsed = true;
-};
+}
 
 chaiJestSnapshot.setFilename = function setFilename() {
   if (configuredSetFilename) {
     configuredSetFilename.apply(this, arguments);
   } else {
-    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setFilename`.");
+    throw new Error(
+      "Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setFilename`.",
+    );
   }
-}
+};
 
 chaiJestSnapshot.setTestName = function setTestName() {
   if (configuredSetTestName) {
     configuredSetTestName.apply(this, arguments);
   } else {
-    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setTestName`.");
+    throw new Error(
+      "Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.setTestName`.",
+    );
   }
-}
+};
 
 chaiJestSnapshot.configureUsingMochaContext = function configureUsingMochaContext() {
   if (configuredConfigureUsingMochaContext) {
     configuredConfigureUsingMochaContext.apply(this, arguments);
   } else {
-    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.configureUsingMochaContext`.");
+    throw new Error(
+      "Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.configureUsingMochaContext`.",
+    );
   }
-}
+};
 
 chaiJestSnapshot.resetSnapshotRegistry = function resetSnapshotRegistry() {
   if (configuredResetSnapshotRegistry) {
     configuredResetSnapshotRegistry.apply(this, arguments);
   } else {
-    throw new Error("Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.resetSnapshotRegistry`.");
+    throw new Error(
+      "Please run `chai.use(chaiJestSnapshot)` before using `chaiJestSnapshot.resetSnapshotRegistry`.",
+    );
   }
-}
+};
 
 chaiJestSnapshot.addSerializer = addSerializer;
 

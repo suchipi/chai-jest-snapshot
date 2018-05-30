@@ -10,12 +10,19 @@ describe("getNameForSnapshotUsingTemplate", function() {
     snapshotNameTemplate = "name";
   });
 
-  const getNameForSnapshotUsingTemplate = (...args) => buildGetNameForSnapshotUsingTemplate(snapshotNameRegistry)(...args);
-  const expectRegistryCounter = (number) => expect(snapshotNameRegistry[snapshotFilename][snapshotNameTemplate]).to.equal(number);
+  const getNameForSnapshotUsingTemplate = (...args) =>
+    buildGetNameForSnapshotUsingTemplate(snapshotNameRegistry)(...args);
+  const expectRegistryCounter = (number) =>
+    expect(
+      snapshotNameRegistry[snapshotFilename][snapshotNameTemplate],
+    ).to.equal(number);
 
   describe("when the snapshot name registry is empty", function() {
     it("appends a 1 to the name template", function() {
-      const result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate);
+      const result = getNameForSnapshotUsingTemplate(
+        snapshotFilename,
+        snapshotNameTemplate,
+      );
       expect(result).to.equal("name 1");
     });
 
@@ -35,7 +42,10 @@ describe("getNameForSnapshotUsingTemplate", function() {
     });
 
     it("appends a 1 to the name template", function() {
-      const result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate);
+      const result = getNameForSnapshotUsingTemplate(
+        snapshotFilename,
+        snapshotNameTemplate,
+      );
       expect(result).to.equal("name 1");
     });
 
@@ -55,7 +65,10 @@ describe("getNameForSnapshotUsingTemplate", function() {
     });
 
     it("ignores it and (still) appends 1 to the name", function() {
-      const result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate);
+      const result = getNameForSnapshotUsingTemplate(
+        snapshotFilename,
+        snapshotNameTemplate,
+      );
       expect(result).to.equal("name 1");
     });
   });
@@ -70,7 +83,10 @@ describe("getNameForSnapshotUsingTemplate", function() {
     });
 
     it("adds 1 to the value and returns a new name using the new value", function() {
-      const result = getNameForSnapshotUsingTemplate(snapshotFilename, snapshotNameTemplate);
+      const result = getNameForSnapshotUsingTemplate(
+        snapshotFilename,
+        snapshotNameTemplate,
+      );
       expect(result).to.equal("name 4");
       expectRegistryCounter(4);
     });
