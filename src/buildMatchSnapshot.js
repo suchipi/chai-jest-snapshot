@@ -13,6 +13,9 @@ const buildMatchSnapshot = (utils, parseArgs) => {
   }
 
   return function matchSnapshot(...args) {
+    // support passing a property matcher object as first argument.
+    // This is backwards compatible, as all the prior args were strings or bools.
+    const propertyMatchers = (typeof args[0] === 'object') ? args.shift() : undefined;
     const { snapshotFilename, snapshotName, update, ci } = parseArgs(args);
 
     if (utils.flag(this, 'negate')) {
@@ -26,7 +29,12 @@ const buildMatchSnapshot = (utils, parseArgs) => {
       snapshotPath: absolutePathToSnapshot,
     });
 
-    const match = snapshotState.match(snapshotName, obj, snapshotName);
+    const match = snapshotState.match({
+      testName: snapshotName,
+      received: Object.assign({}, obj, propertyMatchers),
+      key: snapshotName
+    });
+
     const actual = match.actual || "";
     const expected = match.expected || "";
     snapshotState.save();
