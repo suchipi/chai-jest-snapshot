@@ -1,5 +1,7 @@
 import path from "path";
+import jsonPath from "jsonpath";
 import values from "lodash.values";
+import set from "lodash.set";
 import { SnapshotState } from "jest-snapshot";
 
 const buildMatchSnapshot = (utils, parseArgs) => {
@@ -29,9 +31,26 @@ const buildMatchSnapshot = (utils, parseArgs) => {
       snapshotPath: absolutePathToSnapshot,
     });
 
+    // Treat property matchers as jsonpath queries
+    // if they start with a $ and contain a dot.
+    const toMatch = Object.assign({}, obj);
+    const isJsonPath = it => it[0] === '$' && it.indexOf(".") > -1;
+    if(typeof propertyMatchers === 'object') {
+      Object.keys(propertyMatchers).forEach(k => {
+        if(isJsonPath(k)) {
+          jsonPath.paths(obj, k).forEach(path => {
+            const lodashPath = path.slice(1);
+            set(toMatch, lodashPath, propertyMatchers[k]);
+          });
+        } else {
+          toMatch[k] = propertyMatchers[k];
+        }
+      });
+    }
+
     const match = snapshotState.match({
       testName: snapshotName,
-      received: Object.assign({}, obj, propertyMatchers),
+      received: toMatch,
       key: snapshotName
     });
 
