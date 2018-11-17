@@ -5,3 +5,15 @@ declare namespace Chai {
     matchSnapshot(propertyMatchers: object, update: boolean): void;
   }
 }
+
+export = chaiJestSnapshot;
+
+/*~ This example shows how to have multiple overloads for your function */
+declare function chaiJestSnapshot(chai: any, utils: any): void;
+
+declare namespace chaiJestSnapshot {
+  export function setFileName(fileName: string): void;
+  export function setTestName(testName: string): void;
+  export function resetSnapshotRegistry(): void;
+  export function configureUsingMochaContext(ctx: Mocha.Context): void;
+}
