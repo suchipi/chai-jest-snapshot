@@ -7,6 +7,7 @@
   "scripts": {
     "build": "rm -rf dist/* && babel src --out-dir dist && cp index.d.ts dist",
     "mocha": "mocha -r 'dist/spec/index' 'dist/spec/*.spec.js'",
+    "prepublishOnly": "npm run build && npm run mocha",
     "examples": "cd examples && npm test",
     "example_1:watch": "npm run build && cd examples && npm run example_1:watch",
     "example_2:watch": "npm run build && cd examples && npm run example_2:watch",

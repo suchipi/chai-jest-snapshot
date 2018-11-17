@@ -2,7 +2,7 @@ import path from "path";
 import jsonPath from "jsonpath";
 import values from "lodash.values";
 import set from "lodash.set";
-import { SnapshotState } from "jest-snapshot";
+import { SnapshotState, getSerializers } from "jest-snapshot";
 
 const buildMatchSnapshot = (utils, parseArgs) => {
   if (thisRunsInJest()) {
@@ -31,11 +31,24 @@ const buildMatchSnapshot = (utils, parseArgs) => {
       snapshotPath: absolutePathToSnapshot,
     });
 
+    // In certain cases, we can't apply jsonpath property matchers against our
+    // snapshotted data, either because the data isn't an object (e.g., running
+    // a jsonpath against a string makes no sense) or because the data being
+    // snapshotted has a custom serializers, and cloning it with Object.assign
+    // (which we need to do to use jsonpath queries), might break the custom
+    // serializer (e.g., by removing unenumerable properties from the napshotted
+    // data that the custom serializer is relying on). Test if we're in such a case.
+    const skipJsonPathMatchers =
+      typeof obj !== "object" || obj == null
+        || getSerializers().some(it => it.test(obj)); // has custom serializers
+
+    const toMatch = skipJsonPathMatchers ? obj : Object.assign({}, obj);
+
     // Treat property matchers as jsonpath queries
     // if they start with a $ and contain a dot.
-    const toMatch = Object.assign({}, obj);
-    const isJsonPath = it => it[0] === '$' && it.indexOf(".") > -1;
-    if(typeof propertyMatchers === 'object') {
+    if(skipJsonPathMatchers && typeof propertyMatchers === 'object') {
+      const isJsonPath = it => it[0] === '$' && it.indexOf(".") > -1;
+
       Object.keys(propertyMatchers).forEach(k => {
         if(isJsonPath(k)) {
           jsonPath.paths(obj, k).forEach(path => {

@@ -93,7 +93,12 @@ describe("matchSnapshot", function() {
       snapshotPath: EXISTING_SNAPSHOT_PATH,
       updateSnapshot: "all",
     });
-    existingSnapshotState.match(EXISTING_SNAPSHOT_NAME, tree, EXISTING_SNAPSHOT_NAME);
+    existingSnapshotState.match({
+      testName: EXISTING_SNAPSHOT_NAME,
+      received: tree,
+      key: EXISTING_SNAPSHOT_NAME
+    });
+
     existingSnapshotState.save();
 
     object = undefined;
