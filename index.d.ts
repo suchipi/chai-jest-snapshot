@@ -1,14 +1,15 @@
-declare namespace Chai {
-  interface Assertion {
-    matchSnapshot(update?: boolean): void;
-    matchSnapshot(propertyMatchers?: object): void;
-    matchSnapshot(propertyMatchers: object, update: boolean): void;
+declare global {
+  namespace Chai {
+    interface Assertion {
+      matchSnapshot(update?: boolean): void;
+      matchSnapshot(propertyMatchers?: object): void;
+      matchSnapshot(propertyMatchers: object, update: boolean): void;
+    }
   }
 }
-
+  
 export = chaiJestSnapshot;
 
-/*~ This example shows how to have multiple overloads for your function */
 declare function chaiJestSnapshot(chai: any, utils: any): void;
 
 declare namespace chaiJestSnapshot {
