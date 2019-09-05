@@ -45,7 +45,7 @@
   "dependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
-    "jest-snapshot": "^23.6.0",
+    "jest-snapshot": "^24.9.0",
     "jsonpath": "^1.0.0",
     "lodash.clone": "^4.5.0",
     "lodash.clonedeep": "^4.5.0",
