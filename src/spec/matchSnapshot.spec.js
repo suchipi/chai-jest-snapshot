@@ -89,10 +89,10 @@ describe("matchSnapshot", function() {
     // clear out workspace
     rimraf.sync(workspacePath("*"));
     // create the snapshot file that is considered "existing" by these tests
-    const existingSnapshotState = new SnapshotState(undefined, {
-      snapshotPath: EXISTING_SNAPSHOT_PATH,
+    const existingSnapshotState = new SnapshotState(EXISTING_SNAPSHOT_PATH, {
       updateSnapshot: "all",
     });
+
     existingSnapshotState.match({
       testName: EXISTING_SNAPSHOT_NAME,
       received: tree,
