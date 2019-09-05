@@ -1,10 +1,10 @@
-import path from "path";
-import jsonPath from "jsonpath";
-import values from "lodash.values";
-import cloneDeep from "lodash.clonedeep";
-import clone from "lodash.clone";
-import set from "lodash.set";
-import { SnapshotState, getSerializers } from "jest-snapshot";
+import path from 'path';
+import jsonPath from 'jsonpath';
+import values from 'lodash.values';
+import cloneDeep from 'lodash.clonedeep';
+import clone from 'lodash.clone';
+import set from 'lodash.set';
+import { SnapshotState, getSerializers } from 'jest-snapshot';
 
 const buildMatchSnapshot = (utils, parseArgs) => {
   if (thisRunsInJest()) {
@@ -28,9 +28,8 @@ const buildMatchSnapshot = (utils, parseArgs) => {
 
     const obj = this._obj;
     const absolutePathToSnapshot = path.resolve(snapshotFilename);
-    const snapshotState = new SnapshotState(undefined, {
-      updateSnapshot: ci ? "none" : (update ? "all" : "new"),
-      snapshotPath: absolutePathToSnapshot,
+    const snapshotState = new SnapshotState(absolutePathToSnapshot, {
+      updateSnapshot: ci ? 'none' : update ? 'all' : 'new'
     });
 
     // Treat property matchers as jsonpath queries
