@@ -12,24 +12,24 @@ import buildMatchSnapshot from "../buildMatchSnapshot";
 
 const ExampleComponent = () => (
   <div>
-    <h1>
-      Hi!
-    </h1>
+    <h1>Hi!</h1>
   </div>
 );
-const tree = renderer.create(<ExampleComponent />).toJSON()
+const tree = renderer.create(<ExampleComponent />).toJSON();
 const prettyTree = `<div>
   <h1>
     Hi!
   </h1>
 </div>`;
 
-const workspacePath = (...args) => path.join(__dirname, "matchSnapshot.spec.workspace", ...args);
+const workspacePath = (...args) =>
+  path.join(__dirname, "matchSnapshot.spec.workspace", ...args);
 
 const jestSnapshotHeader = "// Jest Snapshot v1, https://goo.gl/fbAQLP\n\n";
 
 const EXISTING_SNAPSHOT_PATH = workspacePath("ExampleComponent.js.snap");
-const EXISTING_SNAPSHOT_RELATIVE_PATH = "src/spec/matchSnapshot.spec.workspace/ExampleComponent.js.snap";
+const EXISTING_SNAPSHOT_RELATIVE_PATH =
+  "src/spec/matchSnapshot.spec.workspace/ExampleComponent.js.snap";
 const EXISTING_SNAPSHOT_NAME = "ExampleComponent renders properly";
 const NONEXISTENT_SNAPSHOT_PATH = workspacePath("SomeOtherComponent.js.snap");
 const NONEXISTENT_SNAPSHOT_NAME = "ExampleComponent throws rubber chickens";
@@ -44,7 +44,7 @@ describe("matchSnapshot", function() {
   const parseArgs = () => ({
     snapshotFilename,
     snapshotName,
-    update,
+    update
   });
 
   // Creates object with shape: { run, assert }
@@ -60,11 +60,11 @@ describe("matchSnapshot", function() {
       run() {
         matchSnapshot.call({
           _obj: object,
-          assert,
+          assert
         });
         timesRan++;
       },
-      assert,
+      assert
     };
   };
 
@@ -74,7 +74,7 @@ describe("matchSnapshot", function() {
     expect(matchOperation.assert).to.have.been.calledWith(true);
   }
 
-  const expectFailure = (actual) => () => {
+  const expectFailure = actual => () => {
     let matchOperation = createMatchOperation();
     matchOperation.run();
     expect(matchOperation.assert).to.have.been.calledWith(
@@ -92,7 +92,7 @@ describe("matchSnapshot", function() {
     rimraf.sync(workspacePath("*"));
     // create the snapshot file that is considered "existing" by these tests
     const existingSnapshotState = new SnapshotState(EXISTING_SNAPSHOT_PATH, {
-      updateSnapshot: "all",
+      updateSnapshot: "all"
     });
 
     existingSnapshotState.match({
@@ -133,11 +133,16 @@ describe("matchSnapshot", function() {
 
         describe("and the assertion is made with `.not` in the chain", function() {
           beforeEach(function() {
-            utils = { flag: (_, name) => name === 'negate' ? true : undefined };
+            utils = {
+              flag: (_, name) => (name === "negate" ? true : undefined)
+            };
           });
 
           it("throws an error", function() {
-            expect(createMatchOperation().run).to.throw(Error, "`matchSnapshot` cannot be used with `.not`.");
+            expect(createMatchOperation().run).to.throw(
+              Error,
+              "`matchSnapshot` cannot be used with `.not`."
+            );
           });
         });
       });
@@ -149,14 +154,20 @@ describe("matchSnapshot", function() {
 
         function doesNotOverwriteSnapshot() {
           createMatchOperation().run();
-          let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
+          let snapshotFileContent = fs.readFileSync(snapshotFilename, "utf8");
           let expectedContent = `${jestSnapshotHeader}exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n${prettyTree}\n\`;\n`;
           expect(snapshotFileContent).to.equal(expectedContent);
         }
 
-        it("does not overwrite the snapshot with the new content", doesNotOverwriteSnapshot);
+        it(
+          "does not overwrite the snapshot with the new content",
+          doesNotOverwriteSnapshot
+        );
 
-        it("the assertion does not pass", expectFailure('"something other than tree"'));
+        it(
+          "the assertion does not pass",
+          expectFailure('"something other than tree"')
+        );
 
         describe("and the 'update' flag set to true", function() {
           beforeEach(function() {
@@ -165,12 +176,12 @@ describe("matchSnapshot", function() {
 
           it("overwrites the snapshot with the new content", function() {
             createMatchOperation().run();
-            let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
+            let snapshotFileContent = fs.readFileSync(snapshotFilename, "utf8");
             let expectedContent = `${jestSnapshotHeader}exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`"something other than tree"\`;\n`;
             expect(snapshotFileContent).to.equal(expectedContent);
           });
 
-          it("the assertion passes", expectPass)
+          it("the assertion passes", expectPass);
         });
 
         describe("and the 'update' flag not set to true", function() {
@@ -184,9 +195,15 @@ describe("matchSnapshot", function() {
             snapshotFilename = EXISTING_SNAPSHOT_RELATIVE_PATH;
           });
 
-          it("does not overwrite the snapshot with the new content", doesNotOverwriteSnapshot);
+          it(
+            "does not overwrite the snapshot with the new content",
+            doesNotOverwriteSnapshot
+          );
 
-          it("the assertion does not pass", expectFailure('"something other than tree"'));
+          it(
+            "the assertion does not pass",
+            expectFailure('"something other than tree"')
+          );
         });
       });
     });
@@ -199,13 +216,14 @@ describe("matchSnapshot", function() {
 
       it("adds the snapshot to the file", function() {
         createMatchOperation().run();
-        let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
-        let expectedContent = `${jestSnapshotHeader}exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n` +
-        prettyTree +
-        `\n\`;\n\n` +
-        `exports[\`${NONEXISTENT_SNAPSHOT_NAME}\`] = \`\n` +
-        prettyTree +
-        `\n\`;\n`;
+        let snapshotFileContent = fs.readFileSync(snapshotFilename, "utf8");
+        let expectedContent =
+          `${jestSnapshotHeader}exports[\`${EXISTING_SNAPSHOT_NAME}\`] = \`\n` +
+          prettyTree +
+          `\n\`;\n\n` +
+          `exports[\`${NONEXISTENT_SNAPSHOT_NAME}\`] = \`\n` +
+          prettyTree +
+          `\n\`;\n`;
         expect(snapshotFileContent).to.equal(expectedContent);
       });
 
@@ -222,10 +240,11 @@ describe("matchSnapshot", function() {
 
     it("a new snapshot file is created with the snapshot content", function() {
       createMatchOperation().run();
-      let snapshotFileContent = fs.readFileSync(snapshotFilename, 'utf8');
-      let expectedContent = `${jestSnapshotHeader}exports[\`${NONEXISTENT_SNAPSHOT_NAME}\`] = \`\n` +
-      prettyTree +
-      `\n\`;\n`;
+      let snapshotFileContent = fs.readFileSync(snapshotFilename, "utf8");
+      let expectedContent =
+        `${jestSnapshotHeader}exports[\`${NONEXISTENT_SNAPSHOT_NAME}\`] = \`\n` +
+        prettyTree +
+        `\n\`;\n`;
       expect(snapshotFileContent).to.equal(expectedContent);
     });
 
