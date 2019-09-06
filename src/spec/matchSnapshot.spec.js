@@ -4,7 +4,7 @@ import path from "path";
 import { expect } from "chai";
 import { SnapshotState } from "jest-snapshot";
 import React from "react";
-import renderer from "react/lib/ReactTestRenderer";
+import renderer from "react-test-renderer";
 import rimraf from "rimraf";
 import sinon from "sinon";
 
