@@ -15,6 +15,11 @@
     "example_4:watch": "npm run build && cd examples && npm run example_4:watch",
     "test": "npm run build && npm run mocha && npm run examples"
   },
+  "importSort": {
+    ".js": {
+      "style": "module"
+    }
+  },
   "keywords": [
     "mocha",
     "chai",
@@ -36,6 +41,9 @@
     "babel-preset-es2015": "6.9.0",
     "babel-preset-react": "6.11.1",
     "chai": "3.5.0",
+    "husky": "^3.0.5",
+    "import-sort": "^6.0.0",
+    "lint-staged": "^9.2.5",
     "mocha": "3.2.0",
     "react": "15.3.0",
     "rimraf": "2.5.4",
@@ -54,5 +62,11 @@
   },
   "peerDependencies": {
     "chai": ">=1.9.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm t"
+    }
   }
 }
