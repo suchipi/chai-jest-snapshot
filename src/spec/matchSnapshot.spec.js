@@ -1,11 +1,13 @@
-import path from "path";
 import fs from "fs";
-import rimraf from "rimraf";
+import path from "path";
+
+import { expect } from "chai";
+import { SnapshotState } from "jest-snapshot";
 import React from "react";
 import renderer from "react/lib/ReactTestRenderer";
-import { expect } from "chai";
+import rimraf from "rimraf";
 import sinon from "sinon";
-import { SnapshotState } from "jest-snapshot";
+
 import buildMatchSnapshot from "../buildMatchSnapshot";
 
 const ExampleComponent = () => (

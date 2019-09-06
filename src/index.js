@@ -1,7 +1,8 @@
-import buildMatchSnapshot from "./buildMatchSnapshot";
-import buildConfigState from "./buildConfigState";
-import determineConfig from "./determineConfig";
 import { addSerializer } from "jest-snapshot";
+
+import buildConfigState from "./buildConfigState";
+import buildMatchSnapshot from "./buildMatchSnapshot";
+import determineConfig from "./determineConfig";
 
 let hasChaiJestSnapshotBeenUsed = false;
 let configuredSetFilename;
