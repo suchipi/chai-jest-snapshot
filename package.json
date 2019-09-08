@@ -15,6 +15,11 @@
     "example_4:watch": "npm run build && cd examples && npm run example_4:watch",
     "test": "npm run build && npm run mocha && npm run examples"
   },
+  "importSort": {
+    ".js": {
+      "style": "module"
+    }
+  },
   "keywords": [
     "mocha",
     "chai",
@@ -35,18 +40,23 @@
     "babel-plugin-transform-undefined-to-void": "^6.8.0",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-react": "6.11.1",
-    "chai": "3.5.0",
-    "mocha": "3.2.0",
-    "react": "15.3.0",
+    "chai": "^4.2.0",
+    "husky": "^3.0.5",
+    "import-sort": "^6.0.0",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.2.5",
+    "mocha": "^6.2.0",
+    "react": "^16.9.0",
+    "react-test-renderer": "^16.9.0",
     "rimraf": "2.5.4",
-    "sinon": "1.17.5",
-    "sinon-chai": "2.8.0"
+    "sinon": "^7.4.2",
+    "sinon-chai": "^3.3.0"
   },
   "dependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
     "jest-snapshot": "^24.9.0",
-    "jsonpath": "^1.0.0",
+    "jsonpath": "^1.0.2",
     "lodash.clone": "^4.5.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.set": "^4.3.2",
@@ -54,5 +64,11 @@
   },
   "peerDependencies": {
     "chai": ">=1.9.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm t"
+    }
   }
 }
