@@ -78,7 +78,7 @@ const buildMatchSnapshot = (utils, parseArgs) => {
     // Note: we only test the top-level data for cusotm serializers
     // (jest might look for them recursively).
     const logCustomSerializerWarning =
-      obj !== toMatch && getSerializers().some(it => it.test(obj)); // we cloned // has custom serializers
+      obj !== toMatch && getSerializers().some(it => it.test(obj)); // was cloned & has custom serializers
 
     if (logCustomSerializerWarning) {
       console.warn(
