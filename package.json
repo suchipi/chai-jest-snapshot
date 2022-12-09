@@ -26,7 +26,7 @@
     "spec",
     "testing"
   ],
-  "author": "Stephen Scott <me@suchipi.com> (http://suchipi.com)",
+  "author": "Lily Skye <me@suchipi.com> (http://suchipi.com)",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "6.11.4",

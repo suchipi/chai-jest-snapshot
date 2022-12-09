@@ -14,7 +14,7 @@
     "example_4": "jest --roots 4_jestMode",
     "example_4:watch": "jest --watch --roots 4_jestMode"
   },
-  "author": "Stephen Scott <me@suchipi.com> (http://suchipi.com)",
+  "author": "Lily Skye <me@suchipi.com> (http://suchipi.com)",
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.5.0",
